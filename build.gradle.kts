@@ -1,19 +1,15 @@
-plugins {
-    id("java")
-}
+allprojects {
+    apply(plugin = "java")
+    apply(plugin = "java-library")
+    apply(plugin = "idea")
 
-group = "net.rankedproject"
-version = "1.0-SNAPSHOT"
+    repositories {
+        maven("https://repo.codemc.io/repository/maven-snapshots/")
+        maven("https://repo.codemc.io/repository/maven-releases/")
+        maven("https://oss.sonatype.org/content/repositories/central")
+        maven("https://oss.sonatype.org/content/repositories/snapshots")
+        maven("https://repo.glaremasters.me/repository/concuncan/")
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-}
-
-tasks.test {
-    useJUnitPlatform()
+        mavenCentral()
+    }
 }

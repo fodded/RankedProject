@@ -10,3 +10,10 @@ include("Spigot:RankedLobby")
 findProject(":Spigot:RankedLobby")?.name = "RankedLobby"
 include("Spigot:CommonSpigot")
 findProject(":Spigot:CommonSpigot")?.name = "CommonSpigot"
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven("https://repo.papermc.io/repository/maven-public/")
+    }
+}

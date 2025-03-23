@@ -15,30 +15,29 @@ public class RankedPlayerController {
 
     private final RankedPlayerService service;
 
-    @Autowired
     public RankedPlayerController(RankedPlayerService service) {
         this.service = service;
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping
     public ResponseEntity<List<RankedPlayer>> getAllPlayers() {
         List<RankedPlayer> allPlayers = service.getAllPlayers();
         return new ResponseEntity<>(allPlayers, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}", produces = "application/json")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<RankedPlayer> getPlayerById(@PathVariable UUID id) {
         RankedPlayer player = service.getPlayerByIdOrCreate(id);
         return new ResponseEntity<>(player, HttpStatus.OK);
     }
 
-    @PostMapping(produces = "application/json")
+    @PostMapping
     public ResponseEntity<RankedPlayer> savePlayer(@RequestBody RankedPlayer player) {
         RankedPlayer savedPlayer = service.savePlayer(player);
         return new ResponseEntity<>(savedPlayer, HttpStatus.CREATED);
     }
 
-    @PutMapping(produces = "application/json")
+    @PutMapping
     public ResponseEntity<RankedPlayer> updatePlayer(@RequestBody RankedPlayer player) {
         RankedPlayer savedPlayer = service.updatePlayer(player);
         return new ResponseEntity<>(savedPlayer, HttpStatus.CREATED);

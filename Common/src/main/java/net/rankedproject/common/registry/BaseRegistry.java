@@ -9,7 +9,6 @@ public abstract class BaseRegistry<K, V> {
 
     public BaseRegistry(Map<K, V> registeredEntries) {
         this.registeredEntries = registeredEntries;
-
         registerDefaults();
     }
 
