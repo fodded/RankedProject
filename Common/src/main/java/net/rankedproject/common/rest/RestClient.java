@@ -4,15 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import net.rankedproject.common.rest.request.RequestFactory;
-import net.rankedproject.common.rest.request.RequestType;
-import okhttp3.*;
+import net.rankedproject.common.rest.request.type.RequestContent;
+import net.rankedproject.common.rest.request.type.RequestType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 
 /**
  * Abstract class representing a generic REST client.
@@ -40,7 +40,7 @@ public abstract class RestClient<V> implements IRestClient<V> {
      * @param request the HTTP request to execute
      * @return the parsed JSON response, or null if unsuccessful
      */
-    public JsonElement get(Request request) {
+    public JsonElement getAsJson(Request request) {
         try (Response response = HTTP_CLIENT.newCall(request).execute()) {
             if (!response.isSuccessful() || response.body() == null) {
                 LOGGER.warning("GET request failed: " + response.code());
@@ -53,11 +53,53 @@ public abstract class RestClient<V> implements IRestClient<V> {
     }
 
     /**
+     * Executes a GET request and returns the response as a JsonElement.
+     *
+     * @return the parsed JSON response, or null if unsuccessful
+     */
+    public JsonElement getAsJson() {
+        Request request = RequestFactory.getInstance().get(RequestType.GET);
+        return getAsJson(request);
+    }
+
+    /**
+     * Executes a GET request and returns the response as a JsonElement.
+     *
+     * @param requestContent DTO class containing information to modify the output request.
+     * @return the parsed JSON response, or null if unsuccessful
+     */
+    public JsonElement getAsJson(RequestContent requestContent) {
+        Request request = RequestFactory.getInstance().get(RequestType.GET, requestContent);
+        return getAsJson(request);
+    }
+
+    /**
      * Send an HTTP Request.
      *
      * @param request the HTTP request to execute
      */
     public void sendRequest(Request request) {
+        executeWithRetry(request, 1);
+    }
+
+    /**
+     * Send an HTTP Request.
+     *
+     * @param requestType the HTTP request type to execute
+     */
+    public void sendRequest(RequestType requestType) {
+        Request request = RequestFactory.getInstance().get(requestType);
+        executeWithRetry(request, 1);
+    }
+
+    /**
+     * Send an HTTP Request.
+     *
+     * @param requestType the HTTP request type to execute
+     * @param requestContent DTO class containing information to modify the output request.
+     */
+    public void sendRequest(RequestType requestType, RequestContent requestContent) {
+        Request request = RequestFactory.getInstance().get(requestType, requestContent);
         executeWithRetry(request, 1);
     }
 

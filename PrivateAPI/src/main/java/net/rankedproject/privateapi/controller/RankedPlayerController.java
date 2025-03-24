@@ -1,7 +1,6 @@
 package net.rankedproject.privateapi.controller;
 
 import net.rankedproject.privateapi.service.RankedPlayerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class RestClientTest {
 
-    private RestClient<?, ?> restClient;
+    private RestClient<?> restClient;
 
     @BeforeEach
     public void setup() {

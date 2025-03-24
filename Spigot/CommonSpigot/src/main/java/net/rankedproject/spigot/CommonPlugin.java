@@ -1,7 +1,7 @@
 package net.rankedproject.spigot;
 
 import net.rankedproject.common.data.domain.BasePlayer;
-import net.rankedproject.common.rest.RestClient;
+import net.rankedproject.common.rest.type.PlayerRestClient;
 import net.rankedproject.spigot.data.listener.PlayerDataLoadListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -9,7 +9,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 public abstract class CommonPlugin extends JavaPlugin {
 
@@ -28,5 +27,5 @@ public abstract class CommonPlugin extends JavaPlugin {
     }
 
     public abstract Collection<Listener> getBukkitListeners();
-    public abstract Collection<Class<RestClient<UUID, BasePlayer>>> getRequiredPlayerData();
+    public abstract Collection<Class<PlayerRestClient<BasePlayer>>> getRequiredPlayerData();
 }

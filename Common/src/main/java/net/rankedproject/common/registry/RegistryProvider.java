@@ -1,10 +1,9 @@
 package net.rankedproject.common.registry;
 
 import lombok.Getter;
-import net.rankedproject.common.rest.provider.RestCommunicatorRegistry;
+import net.rankedproject.common.rest.provider.RestClientRegistry;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class RegistryProvider {
     }
 
     public void registerDefaults() {
-        register(new RestCommunicatorRegistry());
+        register(new RestClientRegistry());
     }
 
     public void register(BaseRegistry<?, ?> registry) {
@@ -28,8 +27,8 @@ public class RegistryProvider {
     }
 
     @SuppressWarnings("unchecked")
-    public <T, U> BaseRegistry<T, U> getRegistry(Class<?> classType) {
-        return (BaseRegistry<T, U>) registries.get(classType);
+    public <K, V, T extends BaseRegistry<K, V>> T getRegistry(Class<?> classType) {
+        return (T) registries.get(classType);
     }
 
     public Map<Class<?>, BaseRegistry<?, ?>> getRegistries() {

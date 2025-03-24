@@ -1,4 +1,4 @@
-package net.rankedproject.common.rest.request;
+package net.rankedproject.common.rest.request.type;
 
 public enum RequestType {
     GET, POST, PUT, DELETE

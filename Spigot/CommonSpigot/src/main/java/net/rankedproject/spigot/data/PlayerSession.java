@@ -2,7 +2,6 @@ package net.rankedproject.spigot.data;
 
 import lombok.Getter;
 import net.rankedproject.common.data.domain.BasePlayer;
-import net.rankedproject.common.rest.RestClient;
 import net.rankedproject.common.rest.provider.RestProvider;
 import net.rankedproject.common.rest.type.PlayerRestClient;
 
@@ -25,11 +24,11 @@ public class PlayerSession {
      * @param playerUUID UUID of the target player
      * @return CompletableFuture as Result
      */
-    public <T extends BasePlayer> CompletableFuture<T> load(
-            Collection<Class<? extends PlayerRestClient<T>>> clients,
+    public CompletableFuture<?> load(
+            Collection<Class<PlayerRestClient<BasePlayer>>> clients,
             UUID playerUUID
     ) {
-        CompletableFuture<T> future = new CompletableFuture<>();
+        CompletableFuture<?> future = new CompletableFuture<>();
         clients.forEach(client -> future
                 .thenCompose($ -> RestProvider.get(client).getPlayerAsync(playerUUID))
                 .thenAccept(data -> {
@@ -44,10 +43,12 @@ public class PlayerSession {
     }
 
     public void unload(UUID playerUUID) {
-        Set< BasePlayer> cachedData = cache.remove(playerUUID);
+        Set<BasePlayer> cachedData = cache.remove(playerUUID);
         cachedData.forEach(data -> {
-            PlayerRestClient<? extends BasePlayer> restClient = null;
-            // TODO: save data on player quit event
+            PlayerRestClient<BasePlayer> restClient = RestProvider.getByReturnType(data.getClass());
+            if (restClient == null) return;
+
+            restClient.savePlayerAsync(data);
         });
     }
 

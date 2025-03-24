@@ -1,10 +1,10 @@
 package net.rankedproject.common.rest;
 
 import com.google.gson.JsonElement;
-import okhttp3.HttpUrl;
+import net.rankedproject.common.rest.request.type.RequestContent;
+import okhttp3.MediaType;
 import okhttp3.Request;
 
-import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 public interface IRestClient<V> {
 
+    MediaType JSON = MediaType.get("application/json");
     ExecutorService EXECUTOR_SERVICE = Executors.newVirtualThreadPerTaskExecutor();
 
     /**
@@ -24,25 +25,25 @@ public interface IRestClient<V> {
      */
     Class<V> getReturnType();
 
-    JsonElement get(Request request);
-    void put(Request request);
-    void post(Request request);
-    void delete(Request request);
+    JsonElement getAsJson(Request request);
+    void put(RequestContent request);
+    void post(RequestContent request);
+    void delete(RequestContent request);
 
-    default CompletableFuture<JsonElement> getAsync(Request request) {
-        return async(() -> get(request));
+    default CompletableFuture<JsonElement> getAsJsonAsync(Request request) {
+        return async(() -> getAsJson(request));
     }
 
-    default CompletableFuture<Void> putSave(Request request) {
-        return async(() -> put(request));
+    default CompletableFuture<Void> putSave(RequestContent requestContent) {
+        return async(() -> put(requestContent));
     }
 
-    default CompletableFuture<Void> postAsync(Request request) {
-        return async(() -> post(request));
+    default CompletableFuture<Void> postAsync(RequestContent requestContent) {
+        return async(() -> post(requestContent));
     }
 
-    default CompletableFuture<Void> deleteAsync(Request request) {
-        return async(() -> delete(request));
+    default CompletableFuture<Void> deleteAsync(RequestContent requestContent) {
+        return async(() -> delete(requestContent));
     }
 
     default CompletableFuture<Void> async(Runnable action) {

@@ -6,9 +6,9 @@ import net.rankedproject.common.rest.impl.RankedPlayerRestClient;
 
 import java.util.IdentityHashMap;
 
-public class RestCommunicatorRegistry extends BaseRegistry<Class<?>, RestClient<?, ?>> {
+public class RestClientRegistry extends BaseRegistry<Class<?>, RestClient<?>> {
 
-    public RestCommunicatorRegistry() {
+    public RestClientRegistry() {
         super(new IdentityHashMap<>());
     }
 

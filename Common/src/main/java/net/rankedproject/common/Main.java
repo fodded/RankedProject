@@ -1,6 +1,5 @@
 package net.rankedproject.common;
 
-import net.rankedproject.common.rest.RestClient;
 import net.rankedproject.common.rest.impl.RankedPlayerRestClient;
 import net.rankedproject.common.rest.provider.RestProvider;
 
@@ -10,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
         RestProvider.get(RankedPlayerRestClient.class)
-                .getAsync(UUID.fromString("c2d3d415-dbdd-4d1a-92a5-33badd11d4be"))
+                .getPlayerAsync(UUID.fromString("c2d3d415-dbdd-4d1a-92a5-33badd11d4be"))
                 .thenAccept(rankedPlayer -> {
                     System.out.println(rankedPlayer.getId() + " was retrieved " + rankedPlayer.toString());
                     rankedPlayer.setDeaths(1000);

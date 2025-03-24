@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
-import java.util.UUID;
-
 @Data
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = true)
