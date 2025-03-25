@@ -41,6 +41,7 @@ public abstract class RestClient<V> implements IRestClient<V> {
      * @return the parsed JSON response, or null if unsuccessful
      */
     public JsonElement getAsJson(Request request) {
+        System.out.println(request);
         try (Response response = HTTP_CLIENT.newCall(request).execute()) {
             if (!response.isSuccessful() || response.body() == null) {
                 LOGGER.warning("GET request failed: " + response.code());

@@ -24,6 +24,7 @@ public abstract class CrudRestClient<V> extends RestClient<V> {
     public V get(String... params) {
         JsonElement jsonElement = getAsJson(RequestContent.builder()
                 .httpBuilder(builder -> {
+                    builder.addPathSegments(getRepository());
                     for (String param : params) {
                         builder.addPathSegment(param);
                     }

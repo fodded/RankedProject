@@ -5,13 +5,7 @@ plugins {
 }
 
 group = "net.rankedproject"
-version = "1.0-SNAPSHOT"
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
+version = "0.0.1"
 
 configurations {
     compileOnly {

@@ -1,0 +1,5 @@
+name: RankedLobby
+main: net.rankedproject.lobby.LobbyPlugin
+version: 1.0
+api-version: 1.21
+author: theparasol

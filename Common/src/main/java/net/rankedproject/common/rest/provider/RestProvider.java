@@ -14,7 +14,7 @@ public class RestProvider {
      * @return An instance of the specified {@code RestClient} type, or {@code null} if not found.
      * @throws ClassCastException if the retrieved instance cannot be cast to the specified type.
      */
-    public static <V, T extends RestClient<V>> T get(Class<T> classType) {
+    public static <V, T extends RestClient<? extends V>> T get(Class<? extends T> classType) {
         return classType.cast(
                 RegistryProvider.getInstance()
                         .getRegistry(RestClientRegistry.class)

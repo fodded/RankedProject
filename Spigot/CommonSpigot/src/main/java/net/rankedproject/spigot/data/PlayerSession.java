@@ -25,21 +25,21 @@ public class PlayerSession {
      * @return CompletableFuture as Result
      */
     public CompletableFuture<?> load(
-            Collection<Class<PlayerRestClient<BasePlayer>>> clients,
+            Collection<Class<? extends PlayerRestClient<?>>> clients,
             UUID playerUUID
     ) {
-        CompletableFuture<?> future = new CompletableFuture<>();
-        clients.forEach(client -> future
-                .thenCompose($ -> RestProvider.get(client).getPlayerAsync(playerUUID))
-                .thenAccept(data -> {
-                    Set<BasePlayer> existingCache = cache.getOrDefault(playerUUID, new HashSet<>());
-                    existingCache.add(data);
+        return CompletableFuture.allOf(clients.stream()
+                .map(client -> RestProvider.get(client)
+                        .getPlayerAsync(playerUUID)
+                        .thenAccept(data -> {
+                            Set<BasePlayer> existingCache = cache.getOrDefault(playerUUID, new HashSet<>());
+                            existingCache.add(data);
 
-                    cache.put(playerUUID, existingCache);
-                })
-        );
-
-        return future;
+                            System.out.println("loaded data " + data);
+                            cache.put(playerUUID, existingCache);
+                        })
+                )
+                .toArray(CompletableFuture[]::new));
     }
 
     public void unload(UUID playerUUID) {

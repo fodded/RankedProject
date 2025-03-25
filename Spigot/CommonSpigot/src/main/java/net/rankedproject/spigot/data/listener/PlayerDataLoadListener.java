@@ -29,6 +29,7 @@ public class PlayerDataLoadListener implements Listener {
                             AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                             MiniMessage.miniMessage().deserialize("<red>Failed to load your data")
                     );
+                    plugin.getLogger().severe("Failed to load data for " + playerUUID + " " + ex.getMessage());
                     return null;
                 })
                 .join();
@@ -42,5 +43,8 @@ public class PlayerDataLoadListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         event.quitMessage(Component.empty());
+
+        UUID playerUUID = event.getPlayer().getUniqueId();
+        PlayerSession.getInstance().unload(playerUUID);
     }
 }
