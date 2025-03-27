@@ -11,7 +11,7 @@ import java.util.Collection;
 public abstract class CrudRestClient<V> extends RestClient<V> {
 
     public Collection<V> getAll() {
-        JsonElement jsonElement = getAsJson(RequestContent.builder()
+        JsonElement jsonElement = retrieve(RequestContent.builder()
                 .httpBuilder(builder -> builder.addPathSegments(getRepository()))
                 .build());
 
@@ -22,7 +22,7 @@ public abstract class CrudRestClient<V> extends RestClient<V> {
     }
 
     public V get(String... params) {
-        JsonElement jsonElement = getAsJson(RequestContent.builder()
+        JsonElement jsonElement = retrieve(RequestContent.builder()
                 .httpBuilder(builder -> {
                     builder.addPathSegments(getRepository());
                     for (String param : params) {
@@ -35,7 +35,7 @@ public abstract class CrudRestClient<V> extends RestClient<V> {
     }
 
     public V get(RequestContent content) {
-        JsonElement jsonElement = getAsJson(content);
+        JsonElement jsonElement = retrieve(content);
         return GSON.fromJson(jsonElement, getReturnType());
     }
 

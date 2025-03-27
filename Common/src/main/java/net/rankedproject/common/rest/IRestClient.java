@@ -25,13 +25,13 @@ public interface IRestClient<V> {
      */
     Class<V> getReturnType();
 
-    JsonElement getAsJson(Request request);
+    JsonElement retrieve(Request request);
     void put(RequestContent request);
     void post(RequestContent request);
     void delete(RequestContent request);
 
     default CompletableFuture<JsonElement> getAsJsonAsync(Request request) {
-        return async(() -> getAsJson(request));
+        return async(() -> retrieve(request));
     }
 
     default CompletableFuture<Void> putSave(RequestContent requestContent) {

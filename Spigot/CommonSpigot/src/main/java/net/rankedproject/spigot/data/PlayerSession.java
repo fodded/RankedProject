@@ -1,5 +1,6 @@
 package net.rankedproject.spigot.data;
 
+import com.google.common.base.Preconditions;
 import lombok.Getter;
 import net.rankedproject.common.data.domain.BasePlayer;
 import net.rankedproject.common.rest.provider.RestProvider;
@@ -8,6 +9,7 @@ import net.rankedproject.common.rest.type.PlayerRestClient;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 @Getter
 public class PlayerSession {
@@ -35,7 +37,6 @@ public class PlayerSession {
                             Set<BasePlayer> existingCache = cache.getOrDefault(playerUUID, new HashSet<>());
                             existingCache.add(data);
 
-                            System.out.println("loaded data " + data);
                             cache.put(playerUUID, existingCache);
                         })
                 )
@@ -59,6 +60,27 @@ public class PlayerSession {
                 .findFirst()
                 .orElse(null)
         );
+    }
+
+    public <T extends BasePlayer> CompletableFuture<Void> updateData(
+            UUID playerUUID,
+            Class<T> dataClassType,
+            Consumer<T> dataConsumer
+    ) {
+        T data = getCachedData(playerUUID, dataClassType);
+        if (data != null) {
+            dataConsumer.accept(data);
+            return CompletableFuture.completedFuture(null);
+        }
+
+        PlayerRestClient<T> restClient = RestProvider.getByReturnType(dataClassType);
+        Preconditions.checkArgument(restClient != null, "Attempted to save player's data with incorrect dataClassType");
+
+        return restClient.getPlayerAsync(playerUUID)
+                .thenCompose(retrievedData -> {
+                    dataConsumer.accept(retrievedData);
+                    return restClient.savePlayerAsync(retrievedData);
+                });
     }
 
     public static <T extends BasePlayer> T get(UUID playerUUID, Class<T> classType) {

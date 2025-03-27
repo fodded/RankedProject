@@ -40,8 +40,7 @@ public abstract class RestClient<V> implements IRestClient<V> {
      * @param request the HTTP request to execute
      * @return the parsed JSON response, or null if unsuccessful
      */
-    public JsonElement getAsJson(Request request) {
-        System.out.println(request);
+    public JsonElement retrieve(Request request) {
         try (Response response = HTTP_CLIENT.newCall(request).execute()) {
             if (!response.isSuccessful() || response.body() == null) {
                 LOGGER.warning("GET request failed: " + response.code());
@@ -58,9 +57,9 @@ public abstract class RestClient<V> implements IRestClient<V> {
      *
      * @return the parsed JSON response, or null if unsuccessful
      */
-    public JsonElement getAsJson() {
+    public JsonElement retrieve() {
         Request request = RequestFactory.getInstance().get(RequestType.GET);
-        return getAsJson(request);
+        return retrieve(request);
     }
 
     /**
@@ -69,9 +68,9 @@ public abstract class RestClient<V> implements IRestClient<V> {
      * @param requestContent DTO class containing information to modify the output request.
      * @return the parsed JSON response, or null if unsuccessful
      */
-    public JsonElement getAsJson(RequestContent requestContent) {
+    public JsonElement retrieve(RequestContent requestContent) {
         Request request = RequestFactory.getInstance().get(RequestType.GET, requestContent);
-        return getAsJson(request);
+        return retrieve(request);
     }
 
     /**
