@@ -39,7 +39,7 @@ public class RankedPlayerController {
     @PutMapping
     public ResponseEntity<RankedPlayer> updatePlayer(@RequestBody RankedPlayer player) {
         RankedPlayer savedPlayer = service.updatePlayer(player);
-        return new ResponseEntity<>(savedPlayer, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedPlayer, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping(path = "/{id}")

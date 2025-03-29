@@ -33,12 +33,7 @@ public class PlayerSession {
         return CompletableFuture.allOf(clients.stream()
                 .map(client -> RestProvider.get(client)
                         .getPlayerAsync(playerUUID)
-                        .thenAccept(data -> {
-                            Set<BasePlayer> existingCache = cache.getOrDefault(playerUUID, new HashSet<>());
-                            existingCache.add(data);
-
-                            cache.put(playerUUID, existingCache);
-                        })
+                        .thenAccept(this::updateCachedData)
                 )
                 .toArray(CompletableFuture[]::new));
     }
@@ -53,34 +48,39 @@ public class PlayerSession {
         });
     }
 
-    public <T extends BasePlayer> T getCachedData(UUID playerUUID, Class<T> classType) {
-        return classType.cast(cache.get(playerUUID)
-                .stream()
-                .filter(data -> data.getClass().isAssignableFrom(classType))
-                .findFirst()
-                .orElse(null)
-        );
-    }
-
     public <T extends BasePlayer> CompletableFuture<Void> updateData(
             UUID playerUUID,
             Class<T> dataClassType,
             Consumer<T> dataConsumer
     ) {
-        T data = getCachedData(playerUUID, dataClassType);
-        if (data != null) {
-            dataConsumer.accept(data);
-            return CompletableFuture.completedFuture(null);
-        }
-
         PlayerRestClient<T> restClient = RestProvider.getByReturnType(dataClassType);
         Preconditions.checkArgument(restClient != null, "Attempted to save player's data with incorrect dataClassType");
 
         return restClient.getPlayerAsync(playerUUID)
                 .thenCompose(retrievedData -> {
                     dataConsumer.accept(retrievedData);
+                    updateCachedData(retrievedData);
+
                     return restClient.savePlayerAsync(retrievedData);
                 });
+    }
+
+    public void updateCachedData(BasePlayer basePlayer) {
+        UUID playerId = basePlayer.getId();
+        Set<BasePlayer> existingCache = cache.getOrDefault(playerId, new HashSet<>());
+
+        existingCache.removeIf(data -> data.getClass().isAssignableFrom(basePlayer.getClass()));
+        existingCache.add(basePlayer);
+
+        cache.put(playerId, existingCache);
+    }
+
+    public <T extends BasePlayer> T getCachedData(UUID playerUUID, Class<T> classType) {
+        return classType.cast(cache.get(playerUUID)
+                .stream()
+                .filter(data -> data.getClass().isAssignableFrom(classType))
+                .findFirst()
+                .orElse(null));
     }
 
     public static <T extends BasePlayer> T get(UUID playerUUID, Class<T> classType) {
