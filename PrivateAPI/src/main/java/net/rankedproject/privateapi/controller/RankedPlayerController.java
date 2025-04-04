@@ -1,5 +1,6 @@
 package net.rankedproject.privateapi.controller;
 
+import lombok.RequiredArgsConstructor;
 import net.rankedproject.privateapi.service.RankedPlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,14 +10,11 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/ranked/players")
+@RequestMapping(path = "/api/v1/ranked/players")
+@RequiredArgsConstructor
 public class RankedPlayerController {
 
     private final RankedPlayerService service;
-
-    public RankedPlayerController(RankedPlayerService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public ResponseEntity<List<RankedPlayer>> getAllPlayers() {
