@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: "PrivateAPI"
+  data:
+    redis:
+      host: ${REDIS_ADDRESS:192.168.1.22}
+      port: 6379
+  cache:
+    type: redis
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_ADDRESS:192.168.1.22}:5432/ranked_project
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  properties:
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: "always"

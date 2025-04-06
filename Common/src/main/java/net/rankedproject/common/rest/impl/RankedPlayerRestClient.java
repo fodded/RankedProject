@@ -7,7 +7,7 @@ public class RankedPlayerRestClient extends PlayerRestClient<RankedPlayer> {
 
     @Override
     public String getRepository() {
-        return "ranked/players";
+        return "api/v1/ranked/players";
     }
 
     @Override
