@@ -21,6 +21,7 @@ subprojects {
     dependencies {
         compileOnly("org.projectlombok:lombok:1.18.30")
         implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
+        implementation("org.incendo:cloud-paper:2.0.0-beta.10")
         annotationProcessor("org.projectlombok:lombok:1.18.30")
 
         api(project(":Common"))
