@@ -35,7 +35,7 @@ public class RegistryProvider {
         return Map.copyOf(registries);
     }
 
-    public static <T, U> BaseRegistry<T, U> get(Class<?> classType) {
+    public static <T, U, R extends BaseRegistry<T, U>> R get(Class<?> classType) {
         return getInstance().getRegistry(classType);
     }
 }

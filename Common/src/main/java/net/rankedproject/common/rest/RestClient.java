@@ -28,9 +28,9 @@ public abstract class RestClient<V> implements IRestClient<V> {
     protected static final Gson GSON = new GsonBuilder().serializeNulls().create();
 
     protected static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .readTimeout(5, TimeUnit.SECONDS)
-            .writeTimeout(5, TimeUnit.SECONDS)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(5, TimeUnit.MINUTES)
             .retryOnConnectionFailure(true)
             .build();
 

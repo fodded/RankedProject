@@ -1,5 +1,7 @@
 package net.rankedproject.spigot;
 
+import net.rankedproject.common.registry.RegistryProvider;
+import net.rankedproject.common.rest.provider.RestClientRegistry;
 import net.rankedproject.common.rest.type.PlayerRestClient;
 import net.rankedproject.spigot.data.listener.PlayerDataLoadListener;
 import org.bukkit.Bukkit;
@@ -15,6 +17,12 @@ public abstract class CommonPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         registerListeners();
+    }
+
+    @Override
+    public void onDisable() {
+        RestClientRegistry registry = RegistryProvider.get(RestClientRegistry.class);
+        registry.getAllRegistered().forEach((type, client) -> client.shutdown());
     }
 
     private void registerListeners() {
