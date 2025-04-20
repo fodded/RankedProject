@@ -33,8 +33,7 @@ public class RankedPlayerService {
     @Cacheable(value = "rankedPlayers")
     public Mono<RankedPlayer> getPlayerByIdOrCreate(UUID id) {
         return repository.findById(id)
-                .defaultIfEmpty(new RankedPlayer(id))
-                .flatMap(this::savePlayer);
+                .switchIfEmpty(repository.save(new RankedPlayer(id)));
     }
 
     @CachePut(value = "rankedPlayers", key = "#player.id")

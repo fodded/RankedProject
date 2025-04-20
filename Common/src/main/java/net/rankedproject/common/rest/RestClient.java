@@ -3,16 +3,15 @@ package net.rankedproject.common.rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import net.rankedproject.common.rest.request.RequestFactory;
 import net.rankedproject.common.rest.request.type.RequestContent;
 import net.rankedproject.common.rest.request.type.RequestType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * Abstract class representing a generic REST client.
