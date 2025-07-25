@@ -1,16 +1,14 @@
 package net.rankedproject.common.registry;
 
-import lombok.Getter;
+import com.google.inject.Singleton;
 import net.rankedproject.common.rest.provider.RestClientRegistry;
 
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+@Singleton
 public class RegistryProvider {
-
-    @Getter
-    private static final RegistryProvider instance = new RegistryProvider();
 
     private final Map<Class<?>, BaseRegistry<?, ?>> registries = Collections.synchronizedMap(new IdentityHashMap<>());
 
@@ -33,9 +31,5 @@ public class RegistryProvider {
 
     public Map<Class<?>, BaseRegistry<?, ?>> getRegistries() {
         return Map.copyOf(registries);
-    }
-
-    public static <T, U, R extends BaseRegistry<T, U>> R get(Class<?> classType) {
-        return getInstance().getRegistry(classType);
     }
 }

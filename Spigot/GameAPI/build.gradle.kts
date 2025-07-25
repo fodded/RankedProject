@@ -1,19 +1,11 @@
-plugins {
-    id("java")
-}
-
 group = "net.rankedproject"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
+plugins {
+    id("io.papermc.paperweight.userdev")
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-}
-
-tasks.test {
-    useJUnitPlatform()
+    paperweight.paperDevBundle("1.21.4-R0.1-SNAPSHOT")
+    api(project(":Spigot:CommonSpigot"))
 }

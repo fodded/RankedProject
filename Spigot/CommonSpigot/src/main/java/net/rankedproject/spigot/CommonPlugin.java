@@ -1,41 +1,53 @@
 package net.rankedproject.spigot;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import lombok.Getter;
 import net.rankedproject.common.registry.RegistryProvider;
 import net.rankedproject.common.rest.provider.RestClientRegistry;
-import net.rankedproject.common.rest.type.PlayerRestClient;
-import net.rankedproject.spigot.data.listener.PlayerDataLoadListener;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.PluginManager;
+import net.rankedproject.spigot.guice.PluginBinderModule;
+import net.rankedproject.spigot.registrar.BukkitListenerRegistrar;
+import net.rankedproject.spigot.registrar.PluginRegistrar;
+import net.rankedproject.spigot.server.RankedServer;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Collection;
-import java.util.List;
 
 public abstract class CommonPlugin extends JavaPlugin {
 
+    @Inject
+    private RegistryProvider registryProvider;
+
+    @Getter
+    private Injector injector;
+
     @Override
     public void onEnable() {
-        registerListeners();
+        initGuice();
+        initRegistrars();
     }
 
     @Override
     public void onDisable() {
-        RestClientRegistry registry = RegistryProvider.get(RestClientRegistry.class);
+        RestClientRegistry registry = registryProvider.getRegistry(RestClientRegistry.class);
         registry.getAllRegistered().forEach((type, client) -> client.shutdown());
     }
 
-    private void registerListeners() {
-        registerBukkitListeners(List.of(new PlayerDataLoadListener(this)));
+    private void initGuice() {
+        PluginBinderModule module = new PluginBinderModule(this);
+        injector = module.createInjector();
+        injector.injectMembers(this);
     }
 
-    private void registerBukkitListeners(Collection<Listener> listeners) {
-        PluginManager pluginManager = Bukkit.getPluginManager();
+    private void initRegistrars() {
+        var rankedServer = getRankedServer();
+        rankedServer.registrars().forEach(PluginRegistrar::register);
 
-        listeners.forEach(listener -> pluginManager.registerEvents(listener, this));
-        getBukkitListeners().forEach(listener -> pluginManager.registerEvents(listener, this));
+        var bukkitListenerRegistrar = new BukkitListenerRegistrar(this);
+        bukkitListenerRegistrar.register();
     }
 
-    public abstract Collection<Listener> getBukkitListeners();
-    public abstract Collection<Class<? extends PlayerRestClient<?>>> getRequiredPlayerData();
+    @Provides
+    @Singleton
+    public abstract RankedServer getRankedServer();
 }

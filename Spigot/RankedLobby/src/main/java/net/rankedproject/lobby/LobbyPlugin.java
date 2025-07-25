@@ -1,23 +1,17 @@
 package net.rankedproject.lobby;
 
 import net.rankedproject.common.rest.impl.RankedPlayerRestClient;
-import net.rankedproject.common.rest.type.PlayerRestClient;
-import net.rankedproject.lobby.listener.PlayerJoinListener;
 import net.rankedproject.spigot.CommonPlugin;
-import org.bukkit.event.Listener;
-
-import java.util.Collection;
-import java.util.List;
+import net.rankedproject.spigot.server.RankedServer;
+import net.rankedproject.spigot.server.RankedServerBuilder;
 
 public class LobbyPlugin extends CommonPlugin {
 
     @Override
-    public Collection<Listener> getBukkitListeners() {
-        return List.of(new PlayerJoinListener());
-    }
-
-    @Override
-    public Collection<Class<? extends PlayerRestClient<?>>> getRequiredPlayerData() {
-        return List.of(RankedPlayerRestClient.class);
+    public RankedServer getRankedServer() {
+        return new RankedServerBuilder()
+                .setName("Lobby")
+                .addRequiredPlayerData(RankedPlayerRestClient.class)
+                .build();
     }
 }

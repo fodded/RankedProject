@@ -12,6 +12,7 @@ subprojects {
 
     repositories {
         maven("https://repo.papermc.io/repository/maven-public/")
+        maven("https://repo.infernalsuite.com/repository/maven-snapshots/")
         gradlePluginPortal()
 
         mavenLocal()
@@ -19,11 +20,13 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("org.projectlombok:lombok:1.18.30")
-        implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
-        implementation("org.incendo:cloud-paper:2.0.0-beta.10")
-        annotationProcessor("org.projectlombok:lombok:1.18.30")
-
         api(project(":Common"))
+        compileOnly("org.projectlombok:lombok:1.18.30")
+        compileOnly("com.infernalsuite.asp:api:4.0.0-SNAPSHOT")
+        implementation("org.incendo:cloud-paper:2.0.0-beta.10")
+        implementation("org.reflections:reflections:0.10.2")
+        implementation("com.google.inject:guice:7.0.0")
+        implementation("com.github.ben-manes.caffeine:caffeine:3.2.0")
+        annotationProcessor("org.projectlombok:lombok:1.18.30")
     }
 }

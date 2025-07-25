@@ -2,6 +2,7 @@ package net.rankedproject.common.rest.type;
 
 import com.google.gson.JsonElement;
 import net.rankedproject.common.rest.RestClient;
+import net.rankedproject.common.rest.request.RequestFactory;
 import net.rankedproject.common.rest.request.type.RequestContent;
 import net.rankedproject.common.rest.request.type.RequestType;
 import okhttp3.RequestBody;
@@ -9,6 +10,10 @@ import okhttp3.RequestBody;
 import java.util.Collection;
 
 public abstract class CrudRestClient<V> extends RestClient<V> {
+
+    public CrudRestClient(RequestFactory requestFactory) {
+        super(requestFactory);
+    }
 
     public Collection<V> getAll() {
         JsonElement jsonElement = retrieve(RequestContent.builder()

@@ -1,7 +1,10 @@
 package net.rankedproject.spigot.data;
 
 import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.rankedproject.common.data.domain.BasePlayer;
 import net.rankedproject.common.rest.provider.RestProvider;
 import net.rankedproject.common.rest.type.PlayerRestClient;
@@ -12,12 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 @Getter
+@Singleton
+@RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class PlayerSession {
 
-    @Getter
-    private static final PlayerSession instance = new PlayerSession();
-
     private final Map<UUID, Set<BasePlayer>> cache = new ConcurrentHashMap<>();
+    private final RestProvider restProvider;
 
     /**
      * Loads data and saves to cache
@@ -31,7 +34,7 @@ public class PlayerSession {
             UUID playerUUID
     ) {
         return CompletableFuture.allOf(clients.stream()
-                .map(client -> RestProvider.get(client)
+                .map(client -> restProvider.get(client)
                         .getPlayerAsync(playerUUID)
                         .thenAccept(this::updateCachedData)
                 )
@@ -41,7 +44,7 @@ public class PlayerSession {
     public void unload(UUID playerUUID) {
         Set<BasePlayer> cachedData = cache.remove(playerUUID);
         cachedData.forEach(data -> {
-            PlayerRestClient<BasePlayer> restClient = RestProvider.getByReturnType(data.getClass());
+            PlayerRestClient<BasePlayer> restClient = restProvider.getByReturnType(data.getClass());
             if (restClient == null) return;
 
             restClient.savePlayerAsync(data);
@@ -53,7 +56,7 @@ public class PlayerSession {
             Class<T> dataClassType,
             Consumer<T> dataConsumer
     ) {
-        PlayerRestClient<T> restClient = RestProvider.getByReturnType(dataClassType);
+        PlayerRestClient<T> restClient = restProvider.getByReturnType(dataClassType);
         Preconditions.checkArgument(restClient != null, "Attempted to save player's data with incorrect dataClassType");
 
         return restClient.getPlayerAsync(playerUUID)
@@ -75,15 +78,11 @@ public class PlayerSession {
         cache.put(playerId, existingCache);
     }
 
-    public <T extends BasePlayer> T getCachedData(UUID playerUUID, Class<T> classType) {
+    public <T extends BasePlayer> T get(UUID playerUUID, Class<T> classType) {
         return classType.cast(cache.get(playerUUID)
                 .stream()
                 .filter(data -> data.getClass().isAssignableFrom(classType))
                 .findFirst()
                 .orElse(null));
-    }
-
-    public static <T extends BasePlayer> T get(UUID playerUUID, Class<T> classType) {
-       return classType.cast(getInstance().getCachedData(playerUUID, classType));
     }
 }

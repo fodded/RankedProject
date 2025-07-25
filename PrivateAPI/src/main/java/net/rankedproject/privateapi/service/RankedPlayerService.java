@@ -6,18 +6,18 @@ import net.rankedproject.privateapi.repository.RankedPlayerRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class RankedPlayerService {
 
+    private RedisTemplate redisTemplate;
     private final RankedPlayerRepository repository;
 
     @Cacheable(value = "rankedPlayers")
@@ -33,7 +33,11 @@ public class RankedPlayerService {
     @Cacheable(value = "rankedPlayers")
     public Mono<RankedPlayer> getPlayerByIdOrCreate(UUID id) {
         return repository.findById(id)
-                .switchIfEmpty(repository.save(new RankedPlayer(id)));
+                .switchIfEmpty(Mono.defer(() -> {
+                    RankedPlayer rankedPlayer = new RankedPlayer();
+                    rankedPlayer.setId(id);
+                    return repository.save(rankedPlayer);
+                }));
     }
 
     @CachePut(value = "rankedPlayers", key = "#player.id")

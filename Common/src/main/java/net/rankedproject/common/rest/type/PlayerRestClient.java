@@ -1,6 +1,7 @@
 package net.rankedproject.common.rest.type;
 
 import net.rankedproject.common.data.domain.BasePlayer;
+import net.rankedproject.common.rest.request.RequestFactory;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -8,6 +9,10 @@ import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("UnusedReturnValue")
 public abstract class PlayerRestClient<V extends BasePlayer> extends CrudRestClient<V> {
+
+    public PlayerRestClient(RequestFactory requestFactory) {
+        super(requestFactory);
+    }
 
     public Collection<V> getAllPlayers() {
         return getAll();

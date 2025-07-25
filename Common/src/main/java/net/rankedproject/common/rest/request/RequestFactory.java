@@ -1,6 +1,6 @@
 package net.rankedproject.common.rest.request;
 
-import lombok.Getter;
+import com.google.inject.Singleton;
 import net.rankedproject.common.rest.request.type.RequestContent;
 import net.rankedproject.common.rest.request.type.RequestType;
 import okhttp3.HttpUrl;
@@ -18,10 +18,8 @@ import java.util.function.Function;
  * Factory class for creating and managing HTTP requests using OkHttp.
  * Supports dynamic request composition using consumers for URL and request building.
  */
+@Singleton
 public class RequestFactory {
-
-    @Getter
-    private static final RequestFactory instance = new RequestFactory();
 
     protected static final String BASE_URL = Optional
             .ofNullable(System.getenv("REST_API_URL"))

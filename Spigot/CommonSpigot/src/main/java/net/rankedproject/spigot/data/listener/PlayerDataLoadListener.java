@@ -1,5 +1,6 @@
 package net.rankedproject.spigot.data.listener;
 
+import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -13,16 +14,16 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_={@Inject})
 public class PlayerDataLoadListener implements Listener {
 
     private final CommonPlugin plugin;
+    private final PlayerSession playerSession;
 
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
         UUID playerUUID = event.getUniqueId();
-        PlayerSession.getInstance()
-                .load(plugin.getRequiredPlayerData(), playerUUID)
+        playerSession.load(plugin.getRankedServer().requiredPlayerData(), playerUUID)
                 .thenRun(event::allow)
                 .exceptionally(ex -> {
                     event.disallow(
@@ -45,6 +46,6 @@ public class PlayerDataLoadListener implements Listener {
         event.quitMessage(Component.empty());
 
         UUID playerUUID = event.getPlayer().getUniqueId();
-        PlayerSession.getInstance().unload(playerUUID);
+        playerSession.unload(playerUUID);
     }
 }

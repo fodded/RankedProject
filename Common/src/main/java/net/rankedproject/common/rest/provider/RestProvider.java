@@ -1,9 +1,16 @@
 package net.rankedproject.common.rest.provider;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import lombok.RequiredArgsConstructor;
 import net.rankedproject.common.registry.RegistryProvider;
 import net.rankedproject.common.rest.RestClient;
 
+@Singleton
+@RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class RestProvider {
+
+    private final RegistryProvider registryProvider;
 
     /**
      * Retrieves an instance of the specified {@code RestClient} type from the registry.
@@ -14,12 +21,8 @@ public class RestProvider {
      * @return An instance of the specified {@code RestClient} type, or {@code null} if not found.
      * @throws ClassCastException if the retrieved instance cannot be cast to the specified type.
      */
-    public static <V, T extends RestClient<? extends V>> T get(Class<? extends T> classType) {
-        return classType.cast(
-                RegistryProvider.getInstance()
-                        .getRegistry(RestClientRegistry.class)
-                        .get(classType)
-        );
+    public <V, T extends RestClient<? extends V>> T get(Class<? extends T> classType) {
+        return classType.cast(registryProvider.getRegistry(RestClientRegistry.class).get(classType));
     }
 
     /**
@@ -36,8 +39,8 @@ public class RestProvider {
      * @implNote The method performs an unchecked cast to {@code T}, which is suppressed via {@code @SuppressWarnings("unchecked")}.
      */
     @SuppressWarnings("unchecked")
-    public static <V, T extends RestClient<V>> T getByReturnType(Class<? extends V> classType) {
-        RestClientRegistry registry = RegistryProvider.getInstance().getRegistry(RestClientRegistry.class);
+    public <V, T extends RestClient<V>> T getByReturnType(Class<? extends V> classType) {
+        RestClientRegistry registry = registryProvider.getRegistry(RestClientRegistry.class);
         RestClient<?> restClient = registry.getAllRegistered().values()
                 .stream()
                 .filter(client -> client.getReturnType() == classType)
