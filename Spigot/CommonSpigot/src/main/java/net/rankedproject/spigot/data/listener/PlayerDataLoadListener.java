@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.rankedproject.spigot.CommonPlugin;
-import net.rankedproject.spigot.data.PlayerSession;
+import net.rankedproject.spigot.data.PlayerSessionImpl;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -18,7 +18,7 @@ import java.util.UUID;
 public class PlayerDataLoadListener implements Listener {
 
     private final CommonPlugin plugin;
-    private final PlayerSession playerSession;
+    private final PlayerSessionImpl playerSession;
 
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {

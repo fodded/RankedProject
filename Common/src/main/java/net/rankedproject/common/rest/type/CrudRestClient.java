@@ -44,33 +44,33 @@ public abstract class CrudRestClient<V> extends RestClient<V> {
         return GSON.fromJson(jsonElement, getReturnType());
     }
 
-    public void put(V value) {
-        sendRequest(RequestType.PUT, RequestContent.builder()
+    public void update(V value) {
+        sendRequestWithRetry(RequestType.PUT, RequestContent.builder()
                 .requestBuilder(builder -> builder.put(RequestBody.create(GSON.toJson(value), JSON)))
                 .build());
     }
 
-    public void put(RequestContent content) {
-        sendRequest(RequestType.PUT, content);
+    public void update(RequestContent content) {
+        sendRequestWithRetry(RequestType.PUT, content);
     }
 
-    public void post(V value) {
-        sendRequest(RequestType.POST, RequestContent.builder()
+    public void save(V value) {
+        sendRequestWithRetry(RequestType.POST, RequestContent.builder()
                 .requestBuilder(builder -> builder.post(RequestBody.create(GSON.toJson(value), JSON)))
                 .build());
     }
 
-    public void post(RequestContent content) {
-        sendRequest(RequestType.POST, content);
+    public void save(RequestContent content) {
+        sendRequestWithRetry(RequestType.POST, content);
     }
 
     public void delete(V value) {
-        sendRequest(RequestType.DELETE, RequestContent.builder()
+        sendRequestWithRetry(RequestType.DELETE, RequestContent.builder()
                 .requestBuilder(builder -> builder.delete(RequestBody.create(GSON.toJson(value), JSON)))
                 .build());
     }
 
     public void delete(RequestContent content) {
-        sendRequest(RequestType.DELETE, content);
+        sendRequestWithRetry(RequestType.DELETE, content);
     }
 }

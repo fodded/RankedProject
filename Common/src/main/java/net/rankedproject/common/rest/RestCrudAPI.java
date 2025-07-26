@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
-public interface IRestClient<V> {
+public interface RestCrudAPI<V> {
 
     MediaType JSON = MediaType.get("application/json");
     ExecutorService EXECUTOR_SERVICE = Executors.newVirtualThreadPerTaskExecutor();
@@ -26,20 +26,20 @@ public interface IRestClient<V> {
     Class<V> getReturnType();
 
     JsonElement get(Request request);
-    void put(RequestContent request);
-    void post(RequestContent request);
+    void update(RequestContent request);
+    void save(RequestContent request);
     void delete(RequestContent request);
 
     default CompletableFuture<JsonElement> getAsJsonAsync(Request request) {
         return async(() -> get(request));
     }
 
-    default CompletableFuture<Void> putSave(RequestContent requestContent) {
-        return async(() -> put(requestContent));
+    default CompletableFuture<Void> updateSave(RequestContent requestContent) {
+        return async(() -> update(requestContent));
     }
 
-    default CompletableFuture<Void> postAsync(RequestContent requestContent) {
-        return async(() -> post(requestContent));
+    default CompletableFuture<Void> saveAsync(RequestContent requestContent) {
+        return async(() -> save(requestContent));
     }
 
     default CompletableFuture<Void> deleteAsync(RequestContent requestContent) {

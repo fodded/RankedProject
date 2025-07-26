@@ -11,6 +11,7 @@ import net.rankedproject.common.rest.request.type.RequestType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +24,7 @@ import java.util.logging.Logger;
  * @param <V> the type of the value being sent and received
  */
 @RequiredArgsConstructor(onConstructor_ = {@Inject})
-public abstract class RestClient<V> implements IRestClient<V> {
+public abstract class RestClient<V> implements RestCrudAPI<V> {
 
     private static final int MAX_RETRY_ATTEMPTS = 5;
 
@@ -73,39 +74,79 @@ public abstract class RestClient<V> implements IRestClient<V> {
      * @param requestContent DTO class containing information to modify the output request.
      * @return the parsed JSON response, or null if unsuccessful
      */
-    public JsonElement retrieve(RequestContent requestContent) {
+    public JsonElement retrieve(@NotNull RequestContent requestContent) {
         Request request = requestFactory.get(RequestType.GET, requestContent);
         return get(request);
     }
 
     /**
-     * Send an HTTP Request.
+     * Sends an HTTP Request with retries if it didn't return success
      *
      * @param request the HTTP request to execute
      */
-    public void sendRequest(Request request) {
+    public void sendRequestWithRetry(@NotNull Request request) {
         executeWithRetry(request, 1);
     }
 
     /**
-     * Send an HTTP Request.
+     * Sends an HTTP Request with retries if it didn't return success
      *
      * @param requestType the HTTP request type to execute
      */
-    public void sendRequest(RequestType requestType) {
+    public void sendRequestWithRetry(@NotNull RequestType requestType) {
         Request request = requestFactory.get(requestType);
         executeWithRetry(request, 1);
     }
 
     /**
-     * Send an HTTP Request.
+     * Sends an HTTP Request with retries if it didn't return success
      *
-     * @param requestType the HTTP request type to execute
+     * @param requestType    the HTTP request type to execute
      * @param requestContent DTO class containing information to modify the output request.
      */
-    public void sendRequest(RequestType requestType, RequestContent requestContent) {
+    public void sendRequestWithRetry(
+            @NotNull RequestType requestType,
+            @NotNull RequestContent requestContent
+    ) {
         Request request = requestFactory.get(requestType, requestContent);
         executeWithRetry(request, 1);
+    }
+
+    /**
+     * Sends an HTTP Request.
+     *
+     * @param request the HTTP request to execute
+     * @return Response containing HTTP information
+     */
+    @NotNull
+    public Response sendRequest(@NotNull Request request) {
+        return execute(request);
+    }
+
+    /**
+     * Sends an HTTP Request.
+     *
+     * @param requestType the HTTP request type to execute
+     * @return Response containing HTTP information
+     */
+    @NotNull
+    public Response sendRequest(@NotNull RequestType requestType) {
+        return execute(requestFactory.get(requestType));
+    }
+
+    /**
+     * Sends an HTTP Request.
+     *
+     * @param requestType    the HTTP request type to execute
+     * @param requestContent DTO class containing information to modify the output request.
+     * @return Response containing HTTP information
+     */
+    @NotNull
+    public Response sendRequest(
+            @NotNull RequestType requestType,
+            @NotNull RequestContent requestContent
+    ) {
+        return execute(requestFactory.get(requestType, requestContent));
     }
 
     /**
@@ -114,9 +155,9 @@ public abstract class RestClient<V> implements IRestClient<V> {
      * @param request        the HTTP request to execute
      * @param attemptedTimes attempts taken to send a request
      */
-    private void executeWithRetry(Request request, int attemptedTimes) {
+    private void executeWithRetry(@NotNull Request request, int attemptedTimes) {
         if (attemptedTimes >= MAX_RETRY_ATTEMPTS) {
-            LOGGER.warning("Attempt #" + attemptedTimes + " failed sending request: " + request.toString());
+            LOGGER.warning("Attempt #" + attemptedTimes + " failed sending request: " + request);
             return;
         }
 
@@ -126,6 +167,15 @@ public abstract class RestClient<V> implements IRestClient<V> {
             }
         } catch (IOException e) {
             throw new RuntimeException("Request execution failed", e);
+        }
+    }
+
+    @NotNull
+    private Response execute(@NotNull Request request) {
+        try (Response response = HTTP_CLIENT.newCall(request).execute()) {
+            return response;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

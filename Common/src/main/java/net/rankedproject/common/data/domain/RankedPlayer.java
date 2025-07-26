@@ -10,4 +10,5 @@ import lombok.RequiredArgsConstructor;
 public class RankedPlayer extends BasePlayer {
     private String lastSeenName, ipAddress;
     private int kills, deaths, wins, losses;
+    private long dbVersion;
 }

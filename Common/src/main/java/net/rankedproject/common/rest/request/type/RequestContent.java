@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @Builder
-public record RequestContent(@Nullable Consumer<HttpUrl.Builder> httpBuilder,
-                             @Nullable Consumer<Request.Builder> requestBuilder) {
+public record RequestContent(
+        @Nullable Consumer<HttpUrl.Builder> httpBuilder,
+        @Nullable Consumer<Request.Builder> requestBuilder
+) {
 }

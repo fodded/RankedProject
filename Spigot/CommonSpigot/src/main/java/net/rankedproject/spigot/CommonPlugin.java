@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import lombok.Getter;
-import net.rankedproject.common.registry.RegistryProvider;
 import net.rankedproject.common.rest.provider.RestClientRegistry;
 import net.rankedproject.spigot.guice.PluginBinderModule;
 import net.rankedproject.spigot.registrar.BukkitListenerRegistrar;
@@ -16,7 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class CommonPlugin extends JavaPlugin {
 
     @Inject
-    private RegistryProvider registryProvider;
+    private RestClientRegistry restClientRegistry;
 
     @Getter
     private Injector injector;
@@ -29,8 +28,7 @@ public abstract class CommonPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        RestClientRegistry registry = registryProvider.getRegistry(RestClientRegistry.class);
-        registry.getAllRegistered().forEach((type, client) -> client.shutdown());
+        restClientRegistry.getAllRegistered().forEach((type, client) -> client.shutdown());
     }
 
     private void initGuice() {
