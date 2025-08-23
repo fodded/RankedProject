@@ -1,16 +1,20 @@
 package net.rankedproject.spigot.server;
 
 import net.rankedproject.common.rest.type.PlayerRestClient;
+import net.rankedproject.spigot.loader.Instantiator;
 import net.rankedproject.spigot.registrar.PluginRegistrar;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class RankedServerBuilder {
 
-    private final Collection<PluginRegistrar> registrars = new ArrayList<>();
-    private final Collection<Class<? extends PlayerRestClient<?>>> requiredPlayerData = new ArrayList<>();
+    private final List<Instantiator<?>> loaders = new ArrayList<>();
+    private final List<PluginRegistrar> registrars = new ArrayList<>();
+
+    private final List<Class<? extends PlayerRestClient<?>>> requiredPlayerData = new ArrayList<>();
 
     private String name;
 
@@ -45,7 +49,19 @@ public class RankedServerBuilder {
     }
 
     @NotNull
+    public RankedServerBuilder addInstantiator(@NotNull Instantiator<?> instantiator) {
+        this.loaders.add(instantiator);
+        return this;
+    }
+
+    @NotNull
+    public RankedServerBuilder addInstantiator(@NotNull Collection<Instantiator<?>> instantiator) {
+        this.loaders.addAll(instantiator);
+        return this;
+    }
+
+    @NotNull
     public RankedServer build() {
-        return new RankedServer(registrars, requiredPlayerData, name);
+        return new RankedServer(loaders, registrars, requiredPlayerData, name);
     }
 }

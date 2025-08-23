@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.rankedproject.spigot.CommonPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.EventExecutor;
 import org.reflections.Reflections;
 
 @RequiredArgsConstructor
@@ -21,6 +22,8 @@ public class BukkitListenerRegistrar implements PluginRegistrar {
         var reflections = new Reflections(PACKAGE_LOOKUP_NAME);
         reflections.getSubTypesOf(Listener.class).forEach(classType -> {
             var listener = injector.getInstance(classType);
+            if (listener instanceof EventExecutor) return;
+
             pluginManager.registerEvents(listener, plugin);
         });
     }

@@ -1,21 +1,29 @@
 package net.rankedproject.spigot;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.rankedproject.common.rest.provider.RestClientRegistry;
 import net.rankedproject.spigot.guice.PluginBinderModule;
+import net.rankedproject.spigot.loader.InstantiatorRegistry;
+import net.rankedproject.spigot.loader.SlimeLoaderInstantiator;
 import net.rankedproject.spigot.registrar.BukkitListenerRegistrar;
 import net.rankedproject.spigot.registrar.PluginRegistrar;
 import net.rankedproject.spigot.server.RankedServer;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Slf4j
 public abstract class CommonPlugin extends JavaPlugin {
 
     @Inject
     private RestClientRegistry restClientRegistry;
+
+    @Getter
+    private InstantiatorRegistry loaderRegistry;
 
     @Getter
     private Injector injector;
@@ -23,7 +31,10 @@ public abstract class CommonPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         initGuice();
-        initRegistrars();
+
+        var rankedServer = getRankedServer();
+        initRegistrars(rankedServer);
+        initLoaders(rankedServer);
     }
 
     @Override
@@ -37,12 +48,27 @@ public abstract class CommonPlugin extends JavaPlugin {
         injector.injectMembers(this);
     }
 
-    private void initRegistrars() {
-        var rankedServer = getRankedServer();
-        rankedServer.registrars().forEach(PluginRegistrar::register);
+    private void initRegistrars(RankedServer rankedServer) {
+        var registrars = rankedServer.registrars();
+        registrars.forEach(PluginRegistrar::register);
 
         var bukkitListenerRegistrar = new BukkitListenerRegistrar(this);
         bukkitListenerRegistrar.register();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initLoaders(RankedServer rankedServer) {
+        loaderRegistry = new InstantiatorRegistry();
+        loaderRegistry.register(SlimeLoaderInstantiator.class, new SlimeLoaderInstantiator());
+
+        var loaders = rankedServer.instantiator();
+        loaders.forEach(loader -> loaderRegistry.register(loader.getClass(), loader));
+
+        var registeredLoaders = loaderRegistry.getAll();
+        registeredLoaders.forEach(loader -> {
+            var loadedData = loader.init();
+            Preconditions.checkNotNull(loadedData);
+        });
     }
 
     @Provides
