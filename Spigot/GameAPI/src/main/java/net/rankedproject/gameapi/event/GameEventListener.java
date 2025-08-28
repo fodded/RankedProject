@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.rankedproject.gameapi.Game;
 import net.rankedproject.gameapi.event.handler.HandlerListProvider;
-import net.rankedproject.gameapi.event.verifier.EntityEventVerifier;
-import net.rankedproject.gameapi.event.verifier.GameEventVerifier;
-import net.rankedproject.gameapi.event.verifier.WorldEventVerifier;
+import net.rankedproject.gameapi.event.verifier.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -22,7 +20,11 @@ public class GameEventListener<T extends Event> implements Listener, EventExecut
 
     private static final List<GameEventVerifier<?>> GAME_EVENT_VERIFIERS = List.of(
             new EntityEventVerifier(),
-            new WorldEventVerifier()
+            new WorldEventVerifier(),
+            new InventoryEventVerifier(),
+            new PlayerEventVerifier(),
+            new VehicleEventVerifier(),
+            new WeatherEventVerifier()
     );
 
     private final Game game;
@@ -55,7 +57,7 @@ public class GameEventListener<T extends Event> implements Listener, EventExecut
         }
 
         List<GameEventVerifier<T>> verifiers = GAME_EVENT_VERIFIERS.stream()
-                .filter(verifier -> castedEvent.getClass().isAssignableFrom(verifier.getEventType()))
+                .filter(verifier -> verifier.getEventType().isAssignableFrom(castedEvent.getClass()))
                 .map(verifier -> (GameEventVerifier<T>) verifier)
                 .toList();
 

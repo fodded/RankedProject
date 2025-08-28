@@ -1,4 +1,4 @@
-package net.rankedproject.spigot.loader;
+package net.rankedproject.spigot.instantiator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

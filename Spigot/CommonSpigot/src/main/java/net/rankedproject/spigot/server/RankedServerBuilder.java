@@ -1,7 +1,7 @@
 package net.rankedproject.spigot.server;
 
 import net.rankedproject.common.rest.type.PlayerRestClient;
-import net.rankedproject.spigot.loader.Instantiator;
+import net.rankedproject.spigot.instantiator.Instantiator;
 import net.rankedproject.spigot.registrar.PluginRegistrar;
 import org.jetbrains.annotations.NotNull;
 

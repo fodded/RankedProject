@@ -1,4 +1,4 @@
-package net.rankedproject.spigot.loader;
+package net.rankedproject.spigot.instantiator;
 
 import com.infernalsuite.asp.api.loaders.SlimeLoader;
 import com.infernalsuite.asp.loaders.mysql.MysqlLoader;

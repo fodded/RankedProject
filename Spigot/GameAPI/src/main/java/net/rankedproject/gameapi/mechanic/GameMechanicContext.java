@@ -16,4 +16,11 @@ public class GameMechanicContext {
         GameMechanic mechanic = enabledMechanics.remove(mechanicType);
         mechanic.disable();
     }
+
+    public void disableAll() {
+        var mechanics = enabledMechanics.values();
+        mechanics.forEach(GameMechanic::disable);
+
+        enabledMechanics.clear();
+    }
 }

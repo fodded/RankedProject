@@ -9,7 +9,7 @@ import lombok.SneakyThrows;
 import net.minecraft.server.MinecraftServer;
 import net.rankedproject.common.rest.RestCrudAPI;
 import net.rankedproject.gameapi.Game;
-import net.rankedproject.spigot.loader.SlimeLoaderInstantiator;
+import net.rankedproject.spigot.instantiator.SlimeLoaderInstantiator;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 

@@ -38,6 +38,7 @@ public abstract class Game {
     }
 
     public void stop() {
+        mechanicContext.disableAll();
         eventContext.unregisterAll();
         worldContext.unload();
     }

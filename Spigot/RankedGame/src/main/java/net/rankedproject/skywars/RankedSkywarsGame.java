@@ -3,13 +3,10 @@ package net.rankedproject.skywars;
 import net.rankedproject.gameapi.Game;
 import net.rankedproject.gameapi.state.GameState;
 import net.rankedproject.gameapi.world.GameWorldData;
-import net.rankedproject.spigot.CommonPlugin;
 
-public class SkywarsGame extends Game {
+public class RankedSkywarsGame extends Game {
 
-    public SkywarsGame(CommonPlugin plugin) {
-        super(plugin);
-    }
+    private final String worldName;
 
     @Override
     public GameState getInitState() {
@@ -18,6 +15,8 @@ public class SkywarsGame extends Game {
 
     @Override
     public GameWorldData getWorldData() {
-        return null;
+        return GameWorldData.builder()
+                .worldName("")
+                .build();
     }
 }
