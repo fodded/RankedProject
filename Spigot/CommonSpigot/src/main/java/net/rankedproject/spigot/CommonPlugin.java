@@ -10,11 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.rankedproject.common.rest.provider.RestClientRegistry;
 import net.rankedproject.spigot.guice.PluginBinderModule;
 import net.rankedproject.spigot.instantiator.InstantiatorRegistry;
-import net.rankedproject.spigot.instantiator.SlimeLoaderInstantiator;
+import net.rankedproject.spigot.instantiator.impl.SlimeLoaderInstantiator;
 import net.rankedproject.spigot.registrar.BukkitListenerRegistrar;
 import net.rankedproject.spigot.registrar.PluginRegistrar;
 import net.rankedproject.spigot.server.RankedServer;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.concurrent.Executor;
 
 @Slf4j
 public abstract class CommonPlugin extends JavaPlugin {
@@ -23,7 +26,7 @@ public abstract class CommonPlugin extends JavaPlugin {
     private RestClientRegistry restClientRegistry;
 
     @Getter
-    private InstantiatorRegistry loaderRegistry;
+    private InstantiatorRegistry instantiatorRegistry;
 
     @Getter
     private Injector injector;
@@ -58,17 +61,21 @@ public abstract class CommonPlugin extends JavaPlugin {
 
     @SuppressWarnings("unchecked")
     private void initLoaders(RankedServer rankedServer) {
-        loaderRegistry = new InstantiatorRegistry();
-        loaderRegistry.register(SlimeLoaderInstantiator.class, new SlimeLoaderInstantiator());
+        instantiatorRegistry = new InstantiatorRegistry();
+        instantiatorRegistry.register(SlimeLoaderInstantiator.class, new SlimeLoaderInstantiator());
 
-        var loaders = rankedServer.instantiator();
-        loaders.forEach(loader -> loaderRegistry.register(loader.getClass(), loader));
+        var instantiator = rankedServer.instantiator();
+        instantiator.forEach(loader -> instantiatorRegistry.register(loader.getClass(), loader));
 
-        var registeredLoaders = loaderRegistry.getAll();
+        var registeredLoaders = instantiatorRegistry.getAll();
         registeredLoaders.forEach(loader -> {
             var loadedData = loader.init();
             Preconditions.checkNotNull(loadedData);
         });
+    }
+
+    public Executor getMainExecutor() {
+        return Bukkit.getScheduler().getMainThreadExecutor(this);
     }
 
     @Provides

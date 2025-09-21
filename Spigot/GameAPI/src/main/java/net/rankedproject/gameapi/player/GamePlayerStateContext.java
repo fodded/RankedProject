@@ -16,7 +16,7 @@ public class GamePlayerStateContext {
     private final Map<UUID, GamePlayerState> playerStates = new HashMap<>();
     private final Game game;
 
-    public void apply(@NotNull UUID playerUUID, GamePlayerState playerState) {
+    public void apply(@NotNull UUID playerUUID, @NotNull GamePlayerState playerState) {
         Player player = Bukkit.getPlayer(playerUUID);
         if (player == null) return;
 

@@ -11,4 +11,8 @@ public interface GameState {
      */
     @NotNull
     GameStateBehavior behavior();
+
+    default boolean isState(Class<? extends GameState> gameStateType) {
+        return this.getClass() == gameStateType;
+    }
 }

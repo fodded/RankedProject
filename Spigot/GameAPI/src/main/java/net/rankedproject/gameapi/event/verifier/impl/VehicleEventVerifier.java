@@ -1,6 +1,7 @@
-package net.rankedproject.gameapi.event.verifier;
+package net.rankedproject.gameapi.event.verifier.impl;
 
 import net.rankedproject.gameapi.Game;
+import net.rankedproject.gameapi.event.verifier.GameEventVerifier;
 import org.bukkit.event.vehicle.VehicleEvent;
 
 public class VehicleEventVerifier implements GameEventVerifier<VehicleEvent> {

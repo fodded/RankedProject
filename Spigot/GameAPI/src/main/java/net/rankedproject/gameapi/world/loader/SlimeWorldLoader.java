@@ -9,7 +9,7 @@ import lombok.SneakyThrows;
 import net.minecraft.server.MinecraftServer;
 import net.rankedproject.common.rest.RestCrudAPI;
 import net.rankedproject.gameapi.Game;
-import net.rankedproject.spigot.instantiator.SlimeLoaderInstantiator;
+import net.rankedproject.spigot.instantiator.impl.SlimeLoaderInstantiator;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,9 +21,9 @@ public class SlimeWorldLoader implements WorldLoader {
     @Override
     public CompletableFuture<World> load(@NotNull Game game, @NotNull String worldName) {
         var plugin = game.getPlugin();
-        var loaderRegistry = plugin.getLoaderRegistry();
+        var instantiatorRegistry = plugin.getInstantiatorRegistry();
 
-        var slimeLoaderInstantiator = loaderRegistry.get(SlimeLoaderInstantiator.class);
+        var slimeLoaderInstantiator = instantiatorRegistry.get(SlimeLoaderInstantiator.class);
         Preconditions.checkNotNull(slimeLoaderInstantiator);
 
         var slimeLoader = slimeLoaderInstantiator.get();

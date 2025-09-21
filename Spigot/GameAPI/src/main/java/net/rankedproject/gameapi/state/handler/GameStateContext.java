@@ -11,9 +11,9 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor
 public class GameStateContext {
 
-    private final Game game;
-
     private GameState currentState;
+
+    private final Game game;
 
     public void switchNextState() {
         cleanEventContext();

@@ -1,8 +1,9 @@
-package net.rankedproject.spigot.instantiator;
+package net.rankedproject.spigot.instantiator.impl;
 
 import com.infernalsuite.asp.api.loaders.SlimeLoader;
 import com.infernalsuite.asp.loaders.mysql.MysqlLoader;
 import lombok.SneakyThrows;
+import net.rankedproject.spigot.instantiator.Instantiator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;

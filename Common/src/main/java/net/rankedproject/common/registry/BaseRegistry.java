@@ -1,5 +1,7 @@
 package net.rankedproject.common.registry;
 
+import org.jetbrains.annotations.UnmodifiableView;
+
 import java.util.Collections;
 import java.util.Map;
 
@@ -20,6 +22,7 @@ public abstract class BaseRegistry<K, V> {
         return registeredEntries.get(key);
     }
 
+    @UnmodifiableView
     public Map<K, V> getAllRegistered() {
         return Collections.unmodifiableMap(registeredEntries);
     }
