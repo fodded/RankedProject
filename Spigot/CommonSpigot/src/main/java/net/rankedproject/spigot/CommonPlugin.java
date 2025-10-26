@@ -2,11 +2,8 @@ package net.rankedproject.spigot;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Injector;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.rankedproject.common.config.ConfigProvider;
 import net.rankedproject.common.rest.provider.RestClientRegistry;
 import net.rankedproject.spigot.guice.PluginBinderModule;
 import net.rankedproject.spigot.instantiator.InstantiatorRegistry;
@@ -14,30 +11,23 @@ import net.rankedproject.spigot.instantiator.impl.SlimeLoaderInstantiator;
 import net.rankedproject.spigot.registrar.BukkitListenerRegistrar;
 import net.rankedproject.spigot.registrar.PluginRegistrar;
 import net.rankedproject.spigot.server.RankedServer;
-import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Slf4j
+@Getter
 public abstract class CommonPlugin extends JavaPlugin {
 
-    @Getter
-    private InstantiatorRegistry instantiatorRegistry;
+    private final RankedServer rankedServer = rankedServer();
 
-    @Getter
+    private InstantiatorRegistry instantiatorRegistry;
     private Injector injector;
 
     @Override
     public void onEnable() {
         initGuice();
 
-        var rankedServer = getRankedServer();
         initRegistrars(rankedServer);
         initInstantiator(rankedServer);
-
-        Location location = ConfigProvider.get(TestConfig.class, injector)
-                .path("bowi.three")
-                .placeholder("player-name", "bowi")
-                .get();
     }
 
     @Override
@@ -76,7 +66,5 @@ public abstract class CommonPlugin extends JavaPlugin {
         });
     }
 
-    @Provides
-    @Singleton
-    public abstract RankedServer getRankedServer();
+    protected abstract RankedServer rankedServer();
 }

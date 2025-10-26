@@ -8,7 +8,7 @@ import net.rankedproject.spigot.server.RankedServerBuilder;
 public class LobbyPlugin extends CommonPlugin {
 
     @Override
-    public RankedServer getRankedServer() {
+    public RankedServer rankedServer() {
         return new RankedServerBuilder()
                 .setName("Lobby")
                 .addRequiredPlayerData(RankedPlayerRestClient.class)
