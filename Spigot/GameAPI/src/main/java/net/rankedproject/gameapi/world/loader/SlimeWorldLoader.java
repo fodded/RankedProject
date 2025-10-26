@@ -6,10 +6,10 @@ import com.infernalsuite.asp.api.loaders.SlimeLoader;
 import com.infernalsuite.asp.api.world.SlimeWorld;
 import com.infernalsuite.asp.api.world.properties.SlimePropertyMap;
 import lombok.SneakyThrows;
-import net.minecraft.server.MinecraftServer;
 import net.rankedproject.common.rest.RestCrudAPI;
 import net.rankedproject.gameapi.Game;
 import net.rankedproject.spigot.instantiator.impl.SlimeLoaderInstantiator;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,9 +34,9 @@ public class SlimeWorldLoader implements WorldLoader {
                 .thenApplyAsync(slimeWorld -> {
                     var loadedWorld = slimePaper.loadWorld(slimeWorld, true);
                     return loadedWorld.getBukkitWorld();
-                }, MinecraftServer.getServer().executor);
-    }
+                }, Bukkit.getScheduler().getMainThreadExecutor(plugin));
 
+    }
     @SneakyThrows
     private SlimeWorld readSlimeWorld(@NotNull String worldName, AdvancedSlimePaperAPI slimePaper, SlimeLoader slimeLoader) {
         return slimePaper.readWorld(slimeLoader, worldName, false, new SlimePropertyMap());

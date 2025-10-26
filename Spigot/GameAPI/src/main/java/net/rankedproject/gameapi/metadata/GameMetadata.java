@@ -1,7 +1,7 @@
 package net.rankedproject.gameapi.metadata;
 
 public interface GameMetadata {
-    String getWorldName();
+    String worldName();
     String getGameDisplayName();
     String getGameIdentifier();
 }

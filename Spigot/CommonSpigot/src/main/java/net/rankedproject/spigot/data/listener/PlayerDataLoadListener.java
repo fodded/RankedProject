@@ -1,6 +1,7 @@
 package net.rankedproject.spigot.data.listener;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -14,6 +15,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
 
+@Singleton
 @RequiredArgsConstructor(onConstructor_={@Inject})
 public class PlayerDataLoadListener implements Listener {
 

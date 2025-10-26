@@ -2,11 +2,11 @@ package net.rankedproject.game.listener;
 
 import com.google.inject.Inject;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.server.MinecraftServer;
 import net.rankedproject.game.finder.GameFinder;
 import net.rankedproject.game.tracker.GameTracker;
 import net.rankedproject.gameapi.event.type.GamePlayerJoinEvent;
 import net.rankedproject.gameapi.event.type.GamePlayerQuitEvent;
-import net.rankedproject.spigot.CommonPlugin;
 import net.rankedproject.spigot.logger.BukkitLogger;
 import net.rankedproject.spigot.util.ComponentUtil;
 import org.bukkit.Bukkit;
@@ -27,7 +27,6 @@ public class PlayerConnectListener implements Listener {
     private static final String ERROR_GAME_LOG = "Couldn't find a game for player %s in under 3 seconds. An exception was thrown: %s";
 
     private final BukkitLogger logger;
-    private final CommonPlugin plugin;
 
     private final GameTracker gameTracker;
     private final GameFinder<?> gameFinder;
@@ -68,7 +67,7 @@ public class PlayerConnectListener implements Listener {
 
                     var playerJoinEvent = new GamePlayerJoinEvent(game, player);
                     Bukkit.getPluginManager().callEvent(playerJoinEvent);
-                }, plugin.getMainExecutor());
+                }, MinecraftServer.getServer().executor);
     }
 
     @EventHandler

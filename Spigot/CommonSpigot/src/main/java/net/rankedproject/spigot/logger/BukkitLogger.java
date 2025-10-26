@@ -1,9 +1,11 @@
 package net.rankedproject.spigot.logger;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import net.rankedproject.spigot.CommonPlugin;
 
+@Singleton
 @RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class BukkitLogger {
 

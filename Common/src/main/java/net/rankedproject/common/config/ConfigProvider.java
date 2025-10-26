@@ -1,30 +1,40 @@
 package net.rankedproject.common.config;
 
-import com.google.inject.Inject;
-import lombok.RequiredArgsConstructor;
+import com.google.inject.Injector;
 import net.rankedproject.common.config.accessor.ConfigAccessor;
-import net.rankedproject.common.config.loader.ConfigLoader;
-import net.rankedproject.common.config.search.ConfigSearchOption;
+import net.rankedproject.common.config.reader.ConfigReadOption;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-@RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class ConfigProvider {
 
-    private final ConfigLoader configLoader;
-    private final ConfigAccessor configAccessor;
-
     @NotNull
-    public <T extends Config> ConfigSearchOption.Builder get(Class<T> configType) {
-        return ConfigSearchOption.builder()
-                .configLoader(configLoader)
-                .configAccessor(configAccessor)
-                .config(configType);
+    public static <T extends Config> ConfigReadOption.Builder get(
+            @NotNull Class<T> configType,
+            @NotNull Injector injector
+    ) {
+        return ConfigReadOption.builder(injector).config(configType);
     }
 
     @NotNull
-    public CompletableFuture<Void> load(Class<? extends Config> configType) {
-        return CompletableFuture.runAsync(() -> configLoader.load(null));
+    public static CompletableFuture<?> load(
+            @NotNull Class<? extends Config> configType,
+            @NotNull Injector injector
+    ) {
+        var config = injector.getInstance(configType);
+        var configAccessor = injector.getInstance(ConfigAccessor.class);
+
+        return configAccessor.loadAsync(config);
+    }
+
+    @NotNull
+    public static CompletableFuture<?> loadAll(
+            @NotNull Collection<Class<? extends Config>> types,
+            @NotNull Injector injector
+    ) {
+        var configAccessor = injector.getInstance(ConfigAccessor.class);
+        return configAccessor.loadAll(types, injector);
     }
 }

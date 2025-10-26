@@ -5,8 +5,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class RankedGameMetadataParser implements GameMetadataParser<RankedGameMetadata> {
 
+    @NotNull
     @Override
-    public @NotNull RankedGameMetadata parse(@NotNull String gameIdentifier) {
-        return null;
+    public RankedGameMetadata parse(@NotNull String gameIdentifier) {
+        // TODO: load from config
+        return new RankedGameMetadata(null, null, null);
     }
 }

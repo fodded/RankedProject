@@ -4,6 +4,7 @@ import net.rankedproject.gameapi.Game;
 import net.rankedproject.gameapi.metadata.GameMetadata;
 import net.rankedproject.gameapi.metadata.GameMetadataParser;
 import net.rankedproject.spigot.CommonPlugin;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -54,6 +55,6 @@ public interface GameFactory<G extends Game, M extends GameMetadata> {
         G game = createInstance(plugin, metadata);
         return game.getWorldContext()
                 .load()
-                .thenApply(_ -> game);
+                .thenApplyAsync(_ -> game, Bukkit.getScheduler().getMainThreadExecutor(plugin));
     }
 }
