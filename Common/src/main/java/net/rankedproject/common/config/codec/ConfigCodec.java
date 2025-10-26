@@ -2,11 +2,13 @@ package net.rankedproject.common.config.codec;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface ConfigCodec<T> {
+import java.util.List;
+
+public interface ConfigCodec<T, U> {
 
     @NotNull
-    T parse(@NotNull String message);
+    T parse(@NotNull U serialized);
 
     @NotNull
-    Class<?> getReturnType();
+    List<? extends T> parseList(@NotNull U serialized);
 }

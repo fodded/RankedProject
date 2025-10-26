@@ -6,6 +6,12 @@ import java.io.Reader;
 
 public interface ConfigLoader {
 
+    /**
+     *
+     *
+     * @param name
+     * @return
+     */
     @NotNull
     Reader load(@NotNull String name);
 }

@@ -31,12 +31,13 @@ public class CachedConfigAccessor implements ConfigAccessor {
     }
 
     @Override
-    public <T extends Config> ParsedConfig<?> load(@NotNull T config) {
-        var configName = config.getName();
-        var loader = config.getConfigLoader();
+    public <T extends Config> @NotNull ParsedConfig<?> load(@NotNull T config) {
+        var metadata = config.getMetadata();
+        var configName = metadata.name();
+        var loader = metadata.loader();
         var loadedConfig = loader.load(configName);
 
-        var parser = config.getParser();
+        var parser = metadata.parser();
         var parsedConfig = parser.parse(loadedConfig);
 
         loadedConfigs.put(config.getClass(), parsedConfig);

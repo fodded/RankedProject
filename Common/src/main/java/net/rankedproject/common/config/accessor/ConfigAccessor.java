@@ -18,6 +18,7 @@ public interface ConfigAccessor {
     @NotNull
     <T> ParsedConfig<T> get(@NotNull ConfigReadOption readOption);
 
+    @NotNull
     <T extends Config> ParsedConfig<?> load(@NotNull T config);
 
     @NotNull

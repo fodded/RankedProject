@@ -7,8 +7,6 @@ import com.google.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.rankedproject.common.config.ConfigProvider;
-import net.rankedproject.common.config.TestConfig;
-import net.rankedproject.common.config.parser.ConfigParser;
 import net.rankedproject.common.rest.provider.RestClientRegistry;
 import net.rankedproject.spigot.guice.PluginBinderModule;
 import net.rankedproject.spigot.instantiator.InstantiatorRegistry;
