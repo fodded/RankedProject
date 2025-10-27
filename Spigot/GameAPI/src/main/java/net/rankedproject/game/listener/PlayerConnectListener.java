@@ -7,7 +7,6 @@ import net.rankedproject.game.finder.GameFinder;
 import net.rankedproject.game.tracker.GameTracker;
 import net.rankedproject.gameapi.event.type.GamePlayerJoinEvent;
 import net.rankedproject.gameapi.event.type.GamePlayerQuitEvent;
-import net.rankedproject.spigot.logger.BukkitLogger;
 import net.rankedproject.spigot.util.ComponentUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -19,6 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 @RequiredArgsConstructor(onConstructor_ = {@Inject})
 public class PlayerConnectListener implements Listener {
@@ -26,7 +26,7 @@ public class PlayerConnectListener implements Listener {
     private static final String ERROR_GAME_MESSAGE = "<red>Couldn't find a game for you";
     private static final String ERROR_GAME_LOG = "Couldn't find a game for player %s in under 3 seconds. An exception was thrown: %s";
 
-    private final BukkitLogger logger;
+    private final Logger logger;
 
     private final GameTracker gameTracker;
     private final GameFinder<?> gameFinder;

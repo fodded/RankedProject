@@ -1,14 +1,12 @@
 package net.rankedproject.spigot.config;
 
 import com.google.common.base.Preconditions;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.rankedproject.common.config.codec.impl.IntegerConfigCodec;
 import net.rankedproject.common.config.codec.impl.StringConfigCodec;
 import net.rankedproject.common.config.parser.ConfigParser;
 import net.rankedproject.common.config.parser.ParsedConfig;
 import net.rankedproject.spigot.config.codec.LocationConfigCodec;
-import net.rankedproject.spigot.logger.BukkitLogger;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +19,8 @@ public class BukkitConfigParser extends ConfigParser<YamlConfiguration> {
 
     public BukkitConfigParser() {
         super(Map.of(
-                Integer.class, new IntegerConfigCodec(),
                 String.class, new StringConfigCodec(),
+                Integer.class, new IntegerConfigCodec(),
                 Location.class, new LocationConfigCodec()
         ));
     }

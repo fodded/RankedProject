@@ -7,6 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.reflections.Reflections;
 
+import java.util.concurrent.CompletableFuture;
+
 @RequiredArgsConstructor
 public class BukkitListenerRegistrar implements PluginRegistrar {
 
@@ -15,7 +17,7 @@ public class BukkitListenerRegistrar implements PluginRegistrar {
     private final CommonPlugin plugin;
 
     @Override
-    public void register() {
+    public CompletableFuture<?> register() {
         var injector = plugin.getInjector();
         var pluginManager = Bukkit.getPluginManager();
 
@@ -26,5 +28,7 @@ public class BukkitListenerRegistrar implements PluginRegistrar {
 
             pluginManager.registerEvents(listener, plugin);
         });
+
+        return CompletableFuture.completedFuture(null);
     }
 }

@@ -1,6 +1,5 @@
 package net.rankedproject.spigot.config.codec;
 
-import com.google.common.base.Preconditions;
 import net.rankedproject.common.config.codec.ConfigCodec;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,7 +32,6 @@ public class LocationConfigCodec implements ConfigCodec<Location, ConfigurationS
 
     @NotNull
     @Override
-    @SuppressWarnings("unchecked")
     public List<Location> parseList(@NotNull ConfigurationSection section) {
         List<Location> locations = new ArrayList<>();
         for (var map : section.getMapList("")) {

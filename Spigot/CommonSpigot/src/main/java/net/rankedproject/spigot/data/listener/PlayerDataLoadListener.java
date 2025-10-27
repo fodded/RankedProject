@@ -14,12 +14,15 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor_={@Inject})
 public class PlayerDataLoadListener implements Listener {
 
     private final CommonPlugin plugin;
+    private final Logger logger;
+
     private final PlayerSessionImpl playerSession;
 
     @EventHandler
@@ -32,7 +35,7 @@ public class PlayerDataLoadListener implements Listener {
                             AsyncPlayerPreLoginEvent.Result.KICK_OTHER,
                             MiniMessage.miniMessage().deserialize("<red>Failed to load your data")
                     );
-                    plugin.getLogger().severe("Failed to load data for " + playerUUID + " " + ex.getMessage());
+                    logger.severe("Failed to load data for %s: %s".formatted(playerUUID, ex.getMessage()));
                     return null;
                 })
                 .join();

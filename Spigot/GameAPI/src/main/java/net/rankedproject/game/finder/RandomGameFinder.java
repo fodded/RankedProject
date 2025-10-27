@@ -7,7 +7,6 @@ import net.rankedproject.game.factory.GameFactory;
 import net.rankedproject.game.tracker.GameTracker;
 import net.rankedproject.gameapi.Game;
 import net.rankedproject.gameapi.metadata.GameMetadata;
-import net.rankedproject.gameapi.state.impl.WaitingPlayersState;
 import net.rankedproject.spigot.CommonPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +28,7 @@ public class RandomGameFinder<G extends Game, M extends GameMetadata> implements
     public CompletableFuture<G> find(@NotNull UUID playerUUID) {
         return gameTracker.getGames().stream()
                 .filter(game -> !game.getPlayerTracker().getPlayers().contains(playerUUID))
-                .filter(game -> game.getStateContext().getCurrentState().isState(WaitingPlayersState.class))
+                .filter(game -> game.getStateContext().getCurrentState().isState(GameWai.class))
                 .findFirst()
                 .map(game -> CompletableFuture.completedFuture((G) game))
                 .orElseGet(() -> gameFactory.create(plugin, findRandomGameIdentifier()))

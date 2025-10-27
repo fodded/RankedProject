@@ -22,7 +22,7 @@ public class CachedConfigAccessor implements ConfigAccessor {
     @NotNull
     @Override
     @SuppressWarnings("unchecked")
-    public <T> ParsedConfig<T> get(@NotNull ConfigReadOption readOption)  {
+    public <T> ParsedConfig<T> get(@NotNull ConfigReadOption readOption) {
         var configType = readOption.configType();
         var parsedConfig = (ParsedConfig<T>) loadedConfigs.get(configType);
 

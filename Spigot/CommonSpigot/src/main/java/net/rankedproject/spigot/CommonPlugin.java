@@ -9,9 +9,13 @@ import net.rankedproject.spigot.guice.PluginBinderModule;
 import net.rankedproject.spigot.instantiator.InstantiatorRegistry;
 import net.rankedproject.spigot.instantiator.impl.SlimeLoaderInstantiator;
 import net.rankedproject.spigot.registrar.BukkitListenerRegistrar;
+import net.rankedproject.spigot.registrar.ConfigRegistrar;
 import net.rankedproject.spigot.registrar.PluginRegistrar;
+import net.rankedproject.spigot.registrar.ServerProxyRegistrar;
 import net.rankedproject.spigot.server.RankedServer;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Getter
@@ -44,11 +48,18 @@ public abstract class CommonPlugin extends JavaPlugin {
     }
 
     private void initRegistrars(RankedServer rankedServer) {
-        var registrars = rankedServer.registrars();
-        registrars.forEach(PluginRegistrar::register);
+        var registrars = rankedServer.registrars().stream()
+                .map(PluginRegistrar::register)
+                .toArray(CompletableFuture[]::new);
 
         var bukkitListenerRegistrar = new BukkitListenerRegistrar(this);
-        bukkitListenerRegistrar.register();
+        var configRegistrar = new ConfigRegistrar(this);
+        var serverProxyRegistrar = new ServerProxyRegistrar();
+
+        CompletableFuture.allOf(registrars)
+                .thenRun(bukkitListenerRegistrar::register)
+                .thenRun(configRegistrar::register)
+                .thenRun(serverProxyRegistrar::register);
     }
 
     @SuppressWarnings("unchecked")

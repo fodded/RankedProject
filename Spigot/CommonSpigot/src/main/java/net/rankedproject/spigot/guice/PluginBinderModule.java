@@ -4,9 +4,9 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import lombok.RequiredArgsConstructor;
-import net.rankedproject.common.config.loader.ConfigLoader;
 import net.rankedproject.spigot.CommonPlugin;
-import net.rankedproject.spigot.config.BukkitConfigLoader;
+
+import java.util.logging.Logger;
 
 @RequiredArgsConstructor
 public class PluginBinderModule extends AbstractModule {
@@ -20,6 +20,6 @@ public class PluginBinderModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(CommonPlugin.class).toInstance(plugin);
-        bind(ConfigLoader.class).toInstance(new BukkitConfigLoader(plugin));
+        bind(Logger.class).toInstance(plugin.getLogger());
     }
 }

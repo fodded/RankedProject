@@ -1,5 +1,6 @@
 package net.rankedproject.spigot.server;
 
+import net.rankedproject.common.config.Config;
 import net.rankedproject.common.rest.type.PlayerRestClient;
 import net.rankedproject.spigot.instantiator.Instantiator;
 import net.rankedproject.spigot.registrar.PluginRegistrar;
@@ -15,6 +16,7 @@ public class RankedServerBuilder {
     private final List<PluginRegistrar> registrars = new ArrayList<>();
 
     private final List<Class<? extends PlayerRestClient<?>>> requiredPlayerData = new ArrayList<>();
+    private final List<Class<? extends Config>> configs = new ArrayList<>();
 
     private String name;
 
@@ -61,7 +63,13 @@ public class RankedServerBuilder {
     }
 
     @NotNull
+    public RankedServerBuilder addConfig(@NotNull Class<? extends Config> config) {
+        this.configs.add(config);
+        return this;
+    }
+
+    @NotNull
     public RankedServer build() {
-        return new RankedServer(loaders, registrars, requiredPlayerData, name);
+        return new RankedServer(loaders, registrars, requiredPlayerData, configs, name);
     }
 }

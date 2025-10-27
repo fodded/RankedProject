@@ -44,7 +44,7 @@ public class PlayerSessionImpl implements PlayerSession {
             @NotNull UUID playerUUID
     ) {
         return CompletableFuture.allOf(clients.stream()
-                .map(client -> load(playerUUID, client))
+                .map(client -> (CompletableFuture<?>) load(playerUUID, (Class) client))
                 .toArray(CompletableFuture[]::new));
     }
 

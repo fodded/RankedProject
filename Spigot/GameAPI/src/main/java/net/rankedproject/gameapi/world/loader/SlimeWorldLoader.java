@@ -35,8 +35,8 @@ public class SlimeWorldLoader implements WorldLoader {
                     var loadedWorld = slimePaper.loadWorld(slimeWorld, true);
                     return loadedWorld.getBukkitWorld();
                 }, Bukkit.getScheduler().getMainThreadExecutor(plugin));
-
     }
+
     @SneakyThrows
     private SlimeWorld readSlimeWorld(@NotNull String worldName, AdvancedSlimePaperAPI slimePaper, SlimeLoader slimeLoader) {
         return slimePaper.readWorld(slimeLoader, worldName, false, new SlimePropertyMap());

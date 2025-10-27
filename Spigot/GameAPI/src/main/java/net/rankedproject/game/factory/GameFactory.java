@@ -17,7 +17,7 @@ public interface GameFactory<G extends Game, M extends GameMetadata> {
      * @return the metadata parser
      */
     @NotNull
-    GameMetadataParser<M> getParser();
+    Class<? extends GameMetadataParser<M>> getParser();
 
     /**
      * Builds a new {@link Game} from the given metadata and plugin.
@@ -49,7 +49,7 @@ public interface GameFactory<G extends Game, M extends GameMetadata> {
      */
     @NotNull
     default CompletableFuture<G> create(@NotNull CommonPlugin plugin, @NotNull String gameIdentifier) {
-        var metadataParser = getParser();
+        var metadataParser = plugin.getInjector().getInstance(getParser());
         var metadata = metadataParser.parse(gameIdentifier);
 
         G game = createInstance(plugin, metadata);

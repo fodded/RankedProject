@@ -1,5 +1,6 @@
 package net.rankedproject.skywars.factory;
 
+import com.google.inject.Singleton;
 import net.rankedproject.game.factory.GameFactory;
 import net.rankedproject.skywars.RankedSkywarsGame;
 import net.rankedproject.skywars.metadata.RankedGameMetadata;
@@ -7,12 +8,13 @@ import net.rankedproject.skywars.metadata.RankedGameMetadataParser;
 import net.rankedproject.spigot.CommonPlugin;
 import org.jetbrains.annotations.NotNull;
 
+@Singleton
 public class RankedSkywarsGameFactory implements GameFactory<RankedSkywarsGame, RankedGameMetadata> {
 
     @NotNull
     @Override
-    public RankedGameMetadataParser getParser() {
-        return new RankedGameMetadataParser();
+    public Class<RankedGameMetadataParser> getParser() {
+        return RankedGameMetadataParser.class;
     }
 
     @NotNull
