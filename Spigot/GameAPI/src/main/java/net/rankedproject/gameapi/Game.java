@@ -12,7 +12,6 @@ import net.rankedproject.gameapi.scheduler.GameSchedulerContext;
 import net.rankedproject.gameapi.state.GameState;
 import net.rankedproject.gameapi.state.handler.GameStateContext;
 import net.rankedproject.gameapi.world.GameWorldContext;
-import net.rankedproject.gameapi.world.GameWorldData;
 import net.rankedproject.spigot.CommonPlugin;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -70,6 +69,6 @@ public abstract class Game {
         worldContext.unload();
     }
 
+    @NotNull
     public abstract GameState getInitState();
-    public abstract GameWorldData getWorldData();
 }

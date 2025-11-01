@@ -1,4 +1,4 @@
-package net.rankedproject.skywars.config;
+package net.rankedproject.lobby.config;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Singleton
 @RequiredArgsConstructor(onConstructor_={@Inject})
-public class MapInfoConfig implements Config {
+public class LobbyConfig implements Config {
 
     private final Injector injector;
 
@@ -20,8 +20,7 @@ public class MapInfoConfig implements Config {
     @Override
     public ConfigMetadata getMetadata() {
         return ConfigMetadata.builder()
-                .version(1)
-                .name("map-info.yml")
+                .name("lobby-config.yml")
                 .loader(injector.getInstance(BukkitConfigLoader.class))
                 .parser(injector.getInstance(BukkitConfigParser.class))
                 .build();

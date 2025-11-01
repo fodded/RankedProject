@@ -1,4 +1,4 @@
-package net.rankedproject.gameapi.world.loader;
+package net.rankedproject.spigot.world.loader;
 
 import com.google.common.base.Preconditions;
 import com.infernalsuite.asp.api.AdvancedSlimePaperAPI;
@@ -7,7 +7,7 @@ import com.infernalsuite.asp.api.world.SlimeWorld;
 import com.infernalsuite.asp.api.world.properties.SlimePropertyMap;
 import lombok.SneakyThrows;
 import net.rankedproject.common.rest.RestCrudAPI;
-import net.rankedproject.gameapi.Game;
+import net.rankedproject.spigot.CommonPlugin;
 import net.rankedproject.spigot.instantiator.impl.SlimeLoaderInstantiator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -19,10 +19,8 @@ public class SlimeWorldLoader implements WorldLoader {
 
     @NotNull
     @Override
-    public CompletableFuture<World> load(@NotNull Game game, @NotNull String worldName) {
-        var plugin = game.getPlugin();
+    public CompletableFuture<World> load(@NotNull CommonPlugin plugin, @NotNull String worldName) {
         var instantiatorRegistry = plugin.getInstantiatorRegistry();
-
         var slimeLoaderInstantiator = instantiatorRegistry.get(SlimeLoaderInstantiator.class);
         Preconditions.checkNotNull(slimeLoaderInstantiator);
 

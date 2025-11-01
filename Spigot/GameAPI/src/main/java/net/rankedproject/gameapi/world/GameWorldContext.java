@@ -2,6 +2,7 @@ package net.rankedproject.gameapi.world;
 
 import lombok.RequiredArgsConstructor;
 import net.rankedproject.gameapi.Game;
+import net.rankedproject.spigot.world.loader.WorldLoaderType;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -17,12 +18,11 @@ public class GameWorldContext {
     private WeakReference<World> world = NOT_LOADED_WORLD;
 
     public CompletableFuture<Void> load() {
-        var worldData = game.getWorldData();
+        var gameMetadata = game.getMetadata();
+        var worldName = gameMetadata.getWorldName();
+        var worldLoader = WorldLoaderType.SLIME_WORLD.getLoader();
 
-        var worldLoader = worldData.getWorldLoader().getLoader();
-        var worldName = worldData.getWorldName();
-
-        return worldLoader.load(game, worldName).thenAccept(loadedWorld -> {
+        return worldLoader.load(game.getPlugin(), worldName).thenAccept(loadedWorld -> {
             world = new WeakReference<>(loadedWorld);
         });
     }

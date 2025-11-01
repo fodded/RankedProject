@@ -5,15 +5,14 @@ import net.rankedproject.gameapi.Game;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
 
 @Singleton
 public class GameTracker {
 
-    private final Set<Game> games = new TreeSet<>(Comparator.comparingLong(game -> game.getPlayerTracker().getPlayers().size()));
+    private final List<Game> games = new ArrayList<>();
 
     public void track(@NotNull Game game) {
         this.games.add(game);
@@ -25,7 +24,7 @@ public class GameTracker {
 
     @NotNull
     @UnmodifiableView
-    public Set<Game> getGames() {
-        return Collections.unmodifiableSet(games);
+    public List<Game> getGames() {
+        return Collections.unmodifiableList(games);
     }
 }

@@ -1,0 +1,6 @@
+games-active-ids:
+  - "test"
+games:
+  test:
+    world-name: "test-world"
+    display-name: "Test Game"

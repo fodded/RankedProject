@@ -5,8 +5,8 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import net.rankedproject.common.config.ConfigProvider;
+import net.rankedproject.gameapi.config.MapInfoConfig;
 import net.rankedproject.gameapi.metadata.GameMetadataParser;
-import net.rankedproject.skywars.config.MapInfoConfig;
 import org.jetbrains.annotations.NotNull;
 
 @Singleton
@@ -18,6 +18,14 @@ public class RankedGameMetadataParser implements GameMetadataParser<RankedGameMe
     @NotNull
     @Override
     public RankedGameMetadata parse(@NotNull String gameIdentifier) {
-        return new RankedGameMetadata(null, null, null);
+        var worldName = ConfigProvider.get(MapInfoConfig.class, injector)
+                .path("games.%s.world-name".formatted(gameIdentifier))
+                .getAsString();
+
+        var displayName = ConfigProvider.get(MapInfoConfig.class, injector)
+                .path("games.%s.display-name")
+                .getAsString();
+
+        return new RankedGameMetadata(worldName, displayName, gameIdentifier);
     }
 }

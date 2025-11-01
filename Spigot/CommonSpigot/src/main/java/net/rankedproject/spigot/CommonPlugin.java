@@ -52,13 +52,13 @@ public abstract class CommonPlugin extends JavaPlugin {
                 .map(PluginRegistrar::register)
                 .toArray(CompletableFuture[]::new);
 
-        var bukkitListenerRegistrar = new BukkitListenerRegistrar(this);
         var configRegistrar = new ConfigRegistrar(this);
+        var bukkitListenerRegistrar = new BukkitListenerRegistrar(this);
         var serverProxyRegistrar = new ServerProxyRegistrar();
 
-        CompletableFuture.allOf(registrars)
+        configRegistrar.register()
                 .thenRun(bukkitListenerRegistrar::register)
-                .thenRun(configRegistrar::register)
+                .thenCompose(_ -> CompletableFuture.allOf(registrars))
                 .thenRun(serverProxyRegistrar::register);
     }
 

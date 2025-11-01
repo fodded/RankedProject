@@ -1,4 +1,4 @@
-package net.rankedproject.gameapi.world.loader;
+package net.rankedproject.spigot.world.loader;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

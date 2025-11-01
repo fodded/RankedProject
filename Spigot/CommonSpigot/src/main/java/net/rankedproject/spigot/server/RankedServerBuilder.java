@@ -4,6 +4,7 @@ import net.rankedproject.common.config.Config;
 import net.rankedproject.common.rest.type.PlayerRestClient;
 import net.rankedproject.spigot.instantiator.Instantiator;
 import net.rankedproject.spigot.registrar.PluginRegistrar;
+import net.rankedproject.spigot.world.Spawn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class RankedServerBuilder {
     private final List<Class<? extends PlayerRestClient<?>>> requiredPlayerData = new ArrayList<>();
     private final List<Class<? extends Config>> configs = new ArrayList<>();
 
+    private Spawn spawn;
     private String name;
 
     @NotNull
@@ -69,7 +71,13 @@ public class RankedServerBuilder {
     }
 
     @NotNull
+    public RankedServerBuilder addSpawn(@NotNull Spawn spawn) {
+        this.spawn = spawn;
+        return this;
+    }
+
+    @NotNull
     public RankedServer build() {
-        return new RankedServer(loaders, registrars, requiredPlayerData, configs, name);
+        return new RankedServer(loaders, registrars, requiredPlayerData, configs, spawn, name);
     }
 }

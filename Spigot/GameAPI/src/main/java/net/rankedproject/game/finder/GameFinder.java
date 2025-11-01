@@ -1,11 +1,15 @@
 package net.rankedproject.game.finder;
 
 import com.google.inject.ImplementedBy;
+import com.google.inject.Injector;
+import net.rankedproject.common.config.ConfigProvider;
 import net.rankedproject.gameapi.Game;
+import net.rankedproject.gameapi.config.MapInfoConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
 
 @ImplementedBy(RandomGameFinder.class)
 public interface GameFinder<G extends Game> {
@@ -24,9 +28,13 @@ public interface GameFinder<G extends Game> {
      *
      * @return Game identifier
      */
-    // TODO: Make it search a random game from config's list
     @NotNull
-    default String findRandomGameIdentifier() {
-        return "Game";
+    default String findRandomGameIdentifier(Injector injector) {
+        var ids = ConfigProvider.get(MapInfoConfig.class, injector)
+                .path("game.active-ids")
+                .getAsList(String.class);
+
+        var randomIndex = ThreadLocalRandom.current().nextInt(0, ids.size() - 1);
+        return ids.get(randomIndex);
     }
 }

@@ -10,6 +10,7 @@ import net.rankedproject.gameapi.metadata.GameMetadata;
 import net.rankedproject.spigot.CommonPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -26,12 +27,14 @@ public class RandomGameFinder<G extends Game, M extends GameMetadata> implements
     @Override
     @SuppressWarnings("unchecked")
     public CompletableFuture<G> find(@NotNull UUID playerUUID) {
-        return gameTracker.getGames().stream()
+        var availableGame = gameTracker.getGames().stream()
+                .sorted(Comparator.<Game>comparingLong(game -> game.getPlayerTracker().getPlayers().size()).reversed())
                 .filter(game -> !game.getPlayerTracker().getPlayers().contains(playerUUID))
-                .filter(game -> game.getStateContext().getCurrentState().isState(GameWai.class))
-                .findFirst()
-                .map(game -> CompletableFuture.completedFuture((G) game))
-                .orElseGet(() -> gameFactory.create(plugin, findRandomGameIdentifier()))
+                .filter(game -> !game.getStateContext().getCurrentState().isState(game.getInitState().getClass()))
+                .findFirst();
+
+        return availableGame.map(game -> CompletableFuture.completedFuture((G) game))
+                .orElseGet(() -> gameFactory.create(plugin, findRandomGameIdentifier(plugin.getInjector())))
                 .thenApply(game -> {
                     if (!game.isStarted()) {
                         game.start();

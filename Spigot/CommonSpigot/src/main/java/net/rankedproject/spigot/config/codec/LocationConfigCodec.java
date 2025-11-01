@@ -16,7 +16,7 @@ public class LocationConfigCodec implements ConfigCodec<Location, ConfigurationS
     @Override
     public Location parse(@NotNull ConfigurationSection section) {
         World world = null;
-        var worldName = section.getString("world");
+        var worldName = section.getString("world-name");
         if (worldName != null) {
             world = Bukkit.getWorld(worldName);
         }
@@ -36,7 +36,7 @@ public class LocationConfigCodec implements ConfigCodec<Location, ConfigurationS
         List<Location> locations = new ArrayList<>();
         for (var map : section.getMapList("")) {
             World world = null;
-            var worldName = (String) map.get("world");
+            var worldName = (String) map.get("world-name");
             if (worldName != null) {
                 world = Bukkit.getWorld(worldName);
             }
