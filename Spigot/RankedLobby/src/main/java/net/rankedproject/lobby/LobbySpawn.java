@@ -16,6 +16,20 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class LobbySpawn implements Spawn {
 
+    private static final Set<SpawnFlag> SPAWN_FLAGS = Set.of(
+            SpawnFlag.NO_PVP,
+            SpawnFlag.NO_TELEPORT,
+            SpawnFlag.NO_DESTROY_CROP,
+            SpawnFlag.NO_RIGHT_CLICK,
+            SpawnFlag.NO_FOOD_CONSUME,
+            SpawnFlag.NO_BLOCK_PLACE,
+            SpawnFlag.NO_BLOCK_BREAK,
+            SpawnFlag.NO_ENTITY_DAMAGE,
+            SpawnFlag.NO_CREATURE_SPAWN,
+            SpawnFlag.NO_PROJECTILE,
+            SpawnFlag.AUTO_TELEPORT
+    );
+
     private final CommonPlugin plugin;
 
     @NotNull
@@ -37,6 +51,6 @@ public class LobbySpawn implements Spawn {
     @NotNull
     @Override
     public Set<SpawnFlag> getFlags() {
-        return Set.of(SpawnFlag.NO_PVP);
+        return SPAWN_FLAGS;
     }
 }

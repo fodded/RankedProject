@@ -55,13 +55,17 @@ public class SpawnListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        var player = event.getPlayer();
-        if (isFlagNotEnabled(player.getWorld(), SpawnFlag.AUTO_TELEPORT)) {
+        var rankedServer = plugin.getRankedServer();
+        var spawn = rankedServer.spawn();
+        if (spawn == null) {
             return;
         }
 
-        var rankedServer = plugin.getRankedServer();
-        var spawn = rankedServer.spawn();
+        var player = event.getPlayer();
+        boolean isFlagEnabled = spawn.getFlags().contains(SpawnFlag.AUTO_TELEPORT);
+        if (!isFlagEnabled) {
+            return;
+        }
 
         var location = spawn.getLocationFinder().apply(player);
         player.teleportAsync(location);
